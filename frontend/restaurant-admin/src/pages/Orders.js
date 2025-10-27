@@ -5,33 +5,88 @@ import "./Orders.css";
 
 export default function Orders() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState(null); // optional analytics data
 
-  useEffect(() => {
-    API.get("/orders")
-      .then((res) => setOrders(res.data || []))
-      .catch(() => {
-        // sample fallback
-        setOrders([
-          { _id: "o1", orderId: "108", status: "Processing", items: [{ name: "Burger", quantity: 1 }] },
-          { _id: "o2", orderId: "109", status: "Served", items: [{ name: "Pizza", quantity: 2 }] },
-        ]);
-      });
-  }, []);
-
-  const updateStatus = (id, status) => {
-    API.patch(`/orders/${id}`, { status })
-      .then(() => API.get("/orders").then((r) => setOrders(r.data)))
-      .catch(() => alert("Failed to update"));
+  // Fetch all orders
+  const fetchOrders = async () => {
+    try {
+      const res = await API.get("/orders");
+      setOrders(res.data || []);
+    } catch (err) {
+      console.error("Failed to fetch orders:", err);
+      // fallback for UI
+      setOrders([
+        {
+          _id: "o1",
+          orderId: "108",
+          status: "Processing",
+          items: [{ name: "Burger", quantity: 1 }],
+        },
+        {
+          _id: "o2",
+          orderId: "109",
+          status: "Served",
+          items: [{ name: "Pizza", quantity: 2 }],
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
+  // Fetch analytics after updates (optional)
+  const fetchAnalytics = async () => {
+    try {
+      const res = await API.get("/analytics");
+      setStats(res.data);
+    } catch (err) {
+      console.warn("Analytics fetch skipped:", err);
+    }
+  };
+
+  // Handle status update
+  const updateStatus = async (id, status) => {
+    try {
+      await API.patch(`/orders/${id}`, { status });
+      await fetchOrders(); // refresh order list
+      await fetchAnalytics(); // refresh revenue & performance data
+    } catch (err) {
+      console.error("Failed to update order:", err);
+      alert("Failed to update order status");
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    fetchOrders();
+    fetchAnalytics();
+  }, []);
+
   return (
-    <div>
+    <div className="orders-page">
       <h2>Order Line</h2>
-      <div className="orders-grid">
-        {orders.map((o) => (
-          <OrderCard key={o._id} order={o} onUpdate={updateStatus} />
-        ))}
-      </div>
+      {loading ? (
+        <p>Loading orders...</p>
+      ) : orders.length === 0 ? (
+        <p>No orders yet.</p>
+      ) : (
+        <div className="orders-grid">
+          {orders.map((order) => (
+            <OrderCard key={order._id} order={order} onUpdate={updateStatus} />
+          ))}
+        </div>
+      )}
+
+      {/* Optional: analytics quick view */}
+      {stats && (
+        <div className="analytics-summary">
+          <h3>Quick Summary</h3>
+          <p>Total Revenue: ₹{stats.totalRevenue?.toFixed(2) || 0}</p>
+          <p>Total Orders: {stats.totalOrders || 0}</p>
+          <p>Active Tables: {stats.activeTables || 0}</p>
+        </div>
+      )}
     </div>
   );
 }

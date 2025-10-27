@@ -3,16 +3,56 @@ import Chef from "../models/chefModel.js";
 
 export const getAnalytics = async (req, res) => {
   try {
+    // basic stats
     const totalOrders = await Order.countDocuments();
     const totalChefs = await Chef.countDocuments();
-    const totalRevenue = await Order.aggregate([{ $group: { _id: null, total: { $sum: "$totalAmount" } } }]);
-    const totalClients = await Order.distinct("phoneNumber");
+    const revenueAgg = await Order.aggregate([
+      { $group: { _id: null, total: { $sum: "$totalAmount" } } },
+    ]);
+    const totalRevenue = revenueAgg[0]?.total || 0;
+    const totalClients = await Order.distinct("phoneNumber").then((arr) => arr.filter(Boolean).length);
+
+    // order breakdown by status and type
+    const statusAgg = await Order.aggregate([
+      { $group: { _id: "$status", count: { $sum: 1 } } },
+    ]);
+    const typeAgg = await Order.aggregate([
+      { $group: { _id: "$type", count: { $sum: 1 } } },
+    ]);
+    const orders = {
+      served: statusAgg.find((s) => s._id === "Served")?.count || 0,
+      processing: statusAgg.find((s) => s._id === "Processing")?.count || 0,
+      done: statusAgg.find((s) => s._id === "Done")?.count || 0,
+      dineIn: typeAgg.find((t) => t._id === "Dine In")?.count || 0,
+      takeAway: typeAgg.find((t) => t._id === "Takeaway" || t._id === "Take Away")?.count || 0,
+    };
+
+    // revenue timeseries (last 7 days)
+    const revenueSeries = await Order.aggregate([
+      {
+        $group: {
+          _id: {
+            $dateToString: { format: "%Y-%m-%d", date: "$createdAt" },
+          },
+          total: { $sum: "$totalAmount" },
+        },
+      },
+      { $sort: { _id: 1 } },
+      { $limit: 30 },
+    ]);
+
+    // format revenueSeries as [{ name: '2025-10-27', value: 1234 }, ...]
+    const revenue = revenueSeries.map((r) => ({ name: r._id, value: r.total }));
 
     res.json({
-      totalOrders,
-      totalChefs,
-      totalRevenue: totalRevenue[0]?.total || 0,
-      totalClients: totalClients.length,
+      stats: {
+        totalOrders,
+        totalChefs,
+        totalRevenue,
+        totalClients,
+      },
+      orders,
+      revenue,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });

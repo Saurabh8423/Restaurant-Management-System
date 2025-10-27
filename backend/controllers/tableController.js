@@ -31,6 +31,7 @@ export const deleteTable = async (req, res) => {
   try {
     const { id } = req.params;
     const table = await Table.findById(id);
+    if (!table) return res.status(404).json({ message: "Table not found" });
     if (table.reserved) return res.status(400).json({ message: "Cannot delete reserved table" });
 
     await table.deleteOne();
@@ -47,3 +48,21 @@ export const deleteTable = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+// Update table reservation or details
+export const updateTable = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reserved, bookedFor } = req.body;
+    const updatedTable = await Table.findByIdAndUpdate(
+      id,
+      { reserved, bookedFor },
+      { new: true }
+    );
+    res.json(updatedTable);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

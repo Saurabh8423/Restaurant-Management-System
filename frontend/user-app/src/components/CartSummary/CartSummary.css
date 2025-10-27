@@ -29,39 +29,51 @@
   margin-bottom: 6px;
 }
 
-.btn-place {
+/* Swipe Track */
+.swipe-track {
+  position: relative;
   width: 100%;
-  margin-top: 12px;
-  padding: 12px;
-  border-radius: 40px;
-  border: none;
+  height: 50px;
+  background: #f5f5f5;
+  border-radius: 50px;
+  overflow: hidden;
+  margin-top: 15px;
+  cursor: grab;
+}
+
+.swipe-thumb {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 40px;
+  height: 40px;
+  background: #e0e0e0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: #333;
+  transition: left 0.1s linear, background 0.3s ease, color 0.3s ease;
+}
+
+.swipe-thumb.swiped {
   background: #16a34a;
   color: #fff;
 }
 
-.swipe-container {
-  margin-top: 15px;
-  background: #f5f5f5;
-  border-radius: 40px;
-  padding: 10px;
+.swipe-text {
+  position: absolute;
+  width: 100%;
   text-align: center;
-  font-weight: bold;
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  font-weight: 600;
+  color: #777;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: color 0.3s ease;
 }
 
-.swipe-arrow {
-  animation: slideArrow 1s infinite;
-}
-
-@keyframes slideArrow {
-  0% { transform: translateX(0); }
-  50% { transform: translateX(8px); }
-  100% { transform: translateX(0); }
-}
-
-.swipe-container.done {
-  background: #28a745;
-  color: white;
+.swipe-text.done {
+  color: #16a34a;
 }

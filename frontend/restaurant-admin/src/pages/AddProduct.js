@@ -12,6 +12,7 @@ export default function AddProduct() {
     inStock: "",
     rating: "",
   });
+
   const [image, setImage] = useState(null);
   const [preview, setPreview] = useState(null);
 
@@ -27,7 +28,13 @@ export default function AddProduct() {
     e.preventDefault();
     try {
       const formData = new FormData();
-      Object.entries(form).forEach(([key, value]) => formData.append(key, value));
+      formData.append("name", form.name);
+      formData.append("description", form.description);
+      formData.append("category", form.category);
+      formData.append("price", form.price);
+      formData.append("averagePreparationTime", form.averagePreparationTime);
+      formData.append("stock", form.inStock === "Yes" ? "9999" : "0");
+      formData.append("rating", form.rating);
       if (image) formData.append("image", image);
 
       await API.post("/menu", formData, {
@@ -57,19 +64,13 @@ export default function AddProduct() {
         <h2>Add Product</h2>
 
         <form className="add-product-form" onSubmit={submit}>
-          {/* Image Upload */}
           <div className="image-upload">
             {preview ? (
               <img src={preview} alt="Preview" className="preview-img" />
             ) : (
               <div className="upload-box">Upload Image</div>
             )}
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="file-input"
-            />
+            <input type="file" accept="image/*" onChange={handleImageChange} className="file-input" />
           </div>
 
           <input
@@ -109,9 +110,7 @@ export default function AddProduct() {
             type="text"
             placeholder="Average Prep Time (e.g. 20 mins)"
             value={form.averagePreparationTime}
-            onChange={(e) =>
-              setForm({ ...form, averagePreparationTime: e.target.value })
-            }
+            onChange={(e) => setForm({ ...form, averagePreparationTime: e.target.value })}
           />
 
           <select

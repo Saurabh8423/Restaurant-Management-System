@@ -1,21 +1,22 @@
-import React, { useRef, useState } from "react";
+import React, { useState, useRef } from "react";
+import { useSwipeable } from "react-swipeable";
 import "./CartSummary.css";
 
 export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
   const [swiped, setSwiped] = useState(false);
-  const swipeRef = useRef(null);
+  const sliderRef = useRef(null);
 
-  const handleTouchMove = (e) => {
-    const x = e.touches[0].clientX;
-    if (x - swipeRef.current.getBoundingClientRect().left > 200) {
-      setSwiped(true);
-      onPlaceOrder();
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (!swiped) setSwiped(false);
-  };
+  const handlers = useSwipeable({
+    onSwipedRight: () => {
+      if (!swiped) {
+        setSwiped(true);
+        onPlaceOrder();
+        setTimeout(() => setSwiped(false), 1500);
+      }
+    },
+    preventScrollOnSwipe: true,
+    trackMouse: true,
+  });
 
   const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
   const delivery = orderType === "Take Away" ? 50 : 0;
@@ -29,7 +30,6 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
         <span>₹{itemsTotal.toFixed(2)}</span>
       </div>
 
-      {/* Show Delivery Charge only for Take Away */}
       {orderType === "Take Away" && (
         <div className="row">
           <span>Delivery Charge</span>
@@ -55,7 +55,9 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
 
         {orderType === "Take Away" ? (
           <>
-            <div>Delivery at Home: {user?.address || "Current location fetching..."}</div>
+            <div>
+              Delivery at Home: {user?.address || "Current location fetching..."}
+            </div>
             <div>Delivery in 42 mins</div>
           </>
         ) : (
@@ -63,13 +65,13 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
         )}
       </div>
 
-      <div
-        className={`swipe-container ${swiped ? "done" : ""}`}
-        ref={swipeRef}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="swipe-arrow">👉 Swipe to Order</div>
+      <div className="swipe-track" {...handlers} ref={sliderRef}>
+        <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>
+          ➡
+        </div>
+        <span className={`swipe-text ${swiped ? "done" : ""}`}>
+          {swiped ? "Order Placed!" : "Swipe to Order"}
+        </span>
       </div>
     </div>
   );

@@ -1,5 +1,6 @@
 import Order from "../models/orderModel.js";
 import Chef from "../models/chefModel.js";
+import Table from "../models/tableModel.js";
 
 // Assign chef with fewer orders
 const assignChef = async () => {
@@ -25,24 +26,77 @@ export const getOrders = async (req, res) => {
 // Create new order
 export const createOrder = async (req, res) => {
   try {
-    const { orderId, type, items, totalAmount, tableNumber, clientName, phoneNumber, address, instructions } = req.body;
-
-    const assignedChef = await assignChef();
-
-    const newOrder = await Order.create({
+    // accept different payload shapes from frontend
+    // Items may be passed as [{ id, name, price, qty }] (user-app)
+    // Or as [{ name, quantity, price }] (admin)
+    let {
       orderId,
       type,
-      tableNumber,
       items,
       totalAmount,
+      tableNumber,
       clientName,
       phoneNumber,
       address,
       instructions,
+      totals,
+      user,
+    } = req.body;
+
+    // If frontend sent totals.grandTotal, use it
+    if (!totalAmount && totals && totals.grandTotal) {
+      totalAmount = Number(totals.grandTotal);
+    }
+
+    // Map items to schema { name, quantity, price }
+    const mappedItems = (items || []).map((it) => {
+      // admin might send { name, quantity, price } already
+      if (it.name && (it.quantity !== undefined || it.qty !== undefined)) {
+        return {
+          name: it.name,
+          quantity: it.quantity ?? it.qty ?? 1,
+          price: it.price ?? it.unitPrice ?? 0,
+        };
+      }
+      // if item id only or other loose shape, fallback:
+      return {
+        name: it.name ?? it.id ?? "Item",
+        quantity: it.qty ?? it.quantity ?? 1,
+        price: it.price ?? 0,
+      };
+    });
+
+    const assignedChef = await assignChef();
+
+    // Create order document with required fields
+    const newOrder = await Order.create({
+      orderId: orderId || `ODR-${Date.now()}`,
+      type: type || "Takeaway",
+      tableNumber: tableNumber ?? null,
+      items: mappedItems,
+      totalAmount: Number(totalAmount) || mappedItems.reduce((s, i) => s + i.quantity * i.price, 0),
+      clientName: clientName ?? user?.name ?? "",
+      phoneNumber: phoneNumber ?? user?.phone ?? "",
+      address: address ?? user?.address ?? "",
+      instructions: instructions ?? "",
       assignedChef,
       status: "Processing",
       processingTime: Math.floor(Math.random() * 10) + 5, // random countdown in minutes
     });
+
+    // If Dine In, try to mark table reserved and increment bookedFor
+    if ((type === "Dine In" || type === "DineIn" || req.body.orderType === "Dine In") && tableNumber) {
+      try {
+        const t = await Table.findOneAndUpdate(
+          { tableNumber: Number(tableNumber) },
+          { reserved: true, $inc: { bookedFor: 1 } },
+          { new: true }
+        );
+        // ignore if fail
+      } catch (e) {
+        // ignore
+      }
+    }
 
     res.status(201).json(newOrder);
   } catch (error) {

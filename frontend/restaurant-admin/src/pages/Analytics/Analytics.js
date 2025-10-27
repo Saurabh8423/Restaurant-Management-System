@@ -8,12 +8,21 @@ import TablesOverview from "./TablesOverview";
 import ChefPerformance from "./ChefPerformance";
 
 export default function Analytics() {
-  const [stats, setStats] = useState({});
-  const [orders, setOrders] = useState({});
+  // ✅ initialize all states with safe defaults
+  const [stats, setStats] = useState({
+    totalRevenue: 0,
+    totalOrders: 0,
+    totalClients: 0,
+  });
+
+  const [orders, setOrders] = useState({
+    served: 0,
+    dineIn: 0,
+    takeAway: 0,
+  });
+
   const [chefPerformance, setChefPerformance] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
-
-  // Common filters for both sections
   const [filter, setFilter] = useState("Daily");
   const [loading, setLoading] = useState(false);
 
@@ -30,7 +39,8 @@ export default function Analytics() {
 
     // Randomly assign orders to chefs
     for (let i = 0; i < totalOrders; i++) {
-      const randomChef = performance[Math.floor(Math.random() * performance.length)];
+      const randomChef =
+        performance[Math.floor(Math.random() * performance.length)];
       randomChef.totalOrders += 1;
     }
 
@@ -46,17 +56,19 @@ export default function Analytics() {
   const fetchAnalyticsData = async (selectedFilter) => {
     try {
       setLoading(true);
-      const response = await API.get(`/analytics?filter=${selectedFilter.toLowerCase()}`);
-      const data = response.data;
+      const response = await API.get(
+        `/analytics?filter=${selectedFilter.toLowerCase()}`
+      );
+      const data = response.data || {};
 
-      setStats(data.stats);
-      setOrders(data.orders);
-      setRevenueData(data.revenue);
+      // ✅ safely update states
+      setStats(data.stats || {});
+      setOrders(data.orders || {});
+      setRevenueData(data.revenue || []);
 
-      // Simulate chef performance dynamically
+      // simulate chef performance dynamically
       const simulatedChefPerformance = generateChefPerformance(25);
       setChefPerformance(simulatedChefPerformance);
-
     } catch (error) {
       console.error("Error fetching analytics data:", error);
     } finally {
@@ -64,7 +76,6 @@ export default function Analytics() {
     }
   };
 
-  // Fetch data initially and when filter changes
   useEffect(() => {
     fetchAnalyticsData(filter);
   }, [filter]);
@@ -80,9 +91,9 @@ export default function Analytics() {
       <div className="analytics-grid">
         {/* Order Summary */}
         <OrderSummary
-          served={orders.served || 0}
-          dineIn={orders.dineIn || 0}
-          takeAway={orders.takeAway || 0}
+          served={orders?.served || 0}
+          dineIn={orders?.dineIn || 0}
+          takeAway={orders?.takeAway || 0}
           filter={filter}
           setFilter={setFilter}
         />
@@ -101,7 +112,9 @@ export default function Analytics() {
       {/* 3. Chef Performance */}
       <ChefPerformance chefPerformance={chefPerformance} />
 
-      {loading && <p style={{ textAlign: "center", fontSize: "12px" }}>Loading data...</p>}
+      {loading && (
+        <p style={{ textAlign: "center", fontSize: "12px" }}>Loading data...</p>
+      )}
     </div>
   );
 }

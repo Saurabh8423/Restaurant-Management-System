@@ -100,13 +100,15 @@ export default function Checkout() {
     }
 
     const payload = {
-      items: cart,
+      items: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty })), // match user-app item shape
       type: orderType,
+      tableNumber: orderType === "Dine In" ? (findTable()?.tableNumber ?? null) : null,
       user,
       instructions,
       totals: computeTotals(),
       timestamp: new Date().toISOString(),
     };
+
 
     try {
       await api.post("/orders", payload);
@@ -160,7 +162,7 @@ export default function Checkout() {
         </button>
       </div>
 
-      {/* ✅ Show saved cooking instructions summary */}
+      {/* Show saved cooking instructions summary */}
       {instructions && (
         <div className="cook-summary">
           <strong>Cooking Instructions:</strong> {instructions}
