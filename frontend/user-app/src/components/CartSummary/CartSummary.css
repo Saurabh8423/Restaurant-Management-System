@@ -1,0 +1,67 @@
+.summary-card {
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px dashed #eee;
+}
+
+.row.total {
+  border-bottom: none;
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.your-details {
+  margin-top: 10px;
+  color: #374151;
+  font-size: 13px;
+}
+
+.yd-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.btn-place {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 40px;
+  border: none;
+  background: #16a34a;
+  color: #fff;
+}
+
+.swipe-container {
+  margin-top: 15px;
+  background: #f5f5f5;
+  border-radius: 40px;
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.swipe-arrow {
+  animation: slideArrow 1s infinite;
+}
+
+@keyframes slideArrow {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(8px); }
+  100% { transform: translateX(0); }
+}
+
+.swipe-container.done {
+  background: #28a745;
+  color: white;
+}

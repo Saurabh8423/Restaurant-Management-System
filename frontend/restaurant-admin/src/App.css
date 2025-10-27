@@ -1,38 +1,70 @@
-.App {
-  text-align: center;
+/* Reset & Base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+html,
+body,
+#root {
+  height: 100%;
+  width: 100%;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+body {
+  font-family: "Inter", system-ui, Arial, sans-serif;
+  background: #f0f5f3;
+  color: #111;
+  overflow: hidden;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* Layout wrapper */
+.app-container {
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Header full width, fixed height */
+header {
+  width: 100%;
+  height: 60px;
+  background-color: #F0F5F3;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  justify-content: space-between;
+  padding: 0 16px;
+  flex-shrink: 0;
 }
 
-.App-link {
-  color: #61dafb;
+/* Sidebar + content below header */
+.body-section {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  height: calc(100vh - 60px); 
+  overflow: hidden;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Sidebar */
+.sidebar {
+  width: 80px;
+  background-color: #F0F5F3;
+  height: 100%;
+  overflow: auto;
+  padding-top: 5px;
+}
+
+/* Main content (fit remaining space) */
+.content-area {
+  flex: 1;
+  background: #ffffff;
+  padding: 10px;
+  height: 100%;
+  border-radius: 32px;
+  overflow: auto;
+
 }

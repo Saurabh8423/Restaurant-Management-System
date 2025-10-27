@@ -1,0 +1,17 @@
+.thanks-shell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: #16a34a;
+    color: white;
+}
+
+.thanks-card {
+    text-align: center;
+}
+
+.tick {
+    font-size: 72px;
+    margin: 12px 0;
+}

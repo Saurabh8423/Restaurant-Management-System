@@ -1,0 +1,43 @@
+.order-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04)
+}
+
+.order-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 14px;
+    font-size: 12px
+}
+
+.badge.Processing {
+    background: #ffedd5
+}
+
+.badge.Served {
+    background: #bbf7d0
+}
+
+.badge.Done {
+    background: #c7d2fe
+}
+
+.order-items {
+    margin: 8px 0 12px 16px
+}
+
+.order-actions button {
+    margin-right: 8px;
+    padding: 8px 10px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: #fff
+}

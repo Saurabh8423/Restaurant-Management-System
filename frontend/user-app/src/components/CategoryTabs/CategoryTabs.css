@@ -1,0 +1,18 @@
+.cat-tabs {
+  display:flex;
+  gap:10px;
+  overflow:auto;
+  padding:8px 0;
+}
+.cat-btn {
+  padding:8px 14px;
+  border-radius:10px;
+  border:1px solid #e6eee9;
+  background:#fff;
+  min-width:84px;
+}
+.cat-btn.active {
+  background:#16a34a;
+  color:#fff;
+  border: none;
+}

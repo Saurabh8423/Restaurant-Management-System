@@ -1,0 +1,73 @@
+.tables-overview-card {
+  padding: 10px;
+  height: 100%;
+}
+
+/* Legend Section */
+.tables-legend {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 11px;
+  margin: 5px 5px 10px 5px;
+  color: #6b7280;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.legend-color {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+}
+
+/* Status Colors */
+.reserved-color {
+  background: #3DC35F; /* bright green reserved */
+}
+
+.available-color {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+}
+
+/* Grid Area */
+.table-grid-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(45px, 1fr));
+  gap: 5px;
+  justify-items: center;
+}
+
+.mini-table {
+  text-align: center;
+  border-radius: 4px;
+  line-height: 1.2;
+  padding: 4px 2px;
+  height: 35px;
+  width: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* Available */
+.mini-table.available {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #000000;
+}
+
+/* Reserved */
+.mini-table.reserved {
+  background: #3DC35F;
+  border: 1px solid #16a34a;
+  color: #ffffff;
+}

@@ -1,0 +1,95 @@
+.checkout-shell {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 18px;
+  min-height: 100vh;
+}
+
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.ci-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.ci-price {
+  font-size: 14px;
+  color: #666;
+}
+
+.ci-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ci-controls button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e6eee9;
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+.ci-controls button:hover {
+  background-color: #e7e7e7;
+}
+
+.order-type {
+  display: flex;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.order-type button {
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: 1px solid #e6eee9;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+}
+
+.order-type button.active {
+  background: #16a34a;
+  color: #fff;
+  border: none;
+}
+
+.btn {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  background: #fff;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background: #f5f5f5;
+}
+
+/* ✅ Cooking instructions summary */
+.cook-summary {
+  background-color: #f0fff4;
+  border: 1px solid #d1fae5;
+  border-radius: 8px;
+  padding: 10px;
+  margin-top: 12px;
+  color: #065f46;
+  font-size: 15px;
+}
