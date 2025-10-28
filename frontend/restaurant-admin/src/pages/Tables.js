@@ -6,50 +6,49 @@ import "./Tables.css";
 export default function Tables() {
   const [tables, setTables] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchTables();
   }, []);
 
-  const fetchTables = () => {
-    API.get("/tables")
-      .then((res) => {
-        if (Array.isArray(res.data)) setTables(res.data);
-        else if (res.data.tables) setTables(res.data.tables);
-        else setTables(res.data || []);
-      })
-      .catch(() => {
-        const sample = Array.from({ length: 30 }, (_, i) => ({
-          _id: `t-${i + 1}`,
-          tableNumber: i + 1,
-          tableName: "",
-          size: [2, 4, 6, 8][i % 4],
-          reserved: false,
-        }));
-        setTables(sample);
-      });
+  // Fetch all tables
+  const fetchTables = async () => {
+    try {
+      const res = await API.get("/tables");
+      if (Array.isArray(res.data)) setTables(res.data);
+      else if (res.data.tables) setTables(res.data.tables);
+      else setTables(res.data || []);
+    } catch (err) {
+      console.error("Error fetching tables:", err);
+      setTables([]);
+    }
   };
 
-  const deleteTable = (id) => {
-    const updated = tables.filter((t) => t._id !== id);
-    const reindexed = updated.map((t, i) => ({
-      ...t,
-      tableNumber: i + 1,
-      _id: `t-${i + 1}`,
-    }));
-    setTables(reindexed);
+  // Add a table (POST)
+  const addTable = async (payload) => {
+    try {
+      setLoading(true);
+      const res = await API.post("/tables", payload);
+      setTables((prev) => [...prev, res.data]);
+      setShowModal(false);
+    } catch (err) {
+      console.error("Error adding table:", err);
+      alert("Failed to add table. Check backend connection.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const addTable = (payload) => {
-    const newTable = {
-      _id: `t-${tables.length + 1}`,
-      tableNumber: tables.length + 1,
-      tableName: payload.tableName,
-      size: payload.size,
-      reserved: false,
-    };
-    setTables([...tables, newTable]);
-    setShowModal(false);
+  // Delete table
+  const deleteTable = async (id) => {
+    try {
+      await API.delete(`/tables/${id}`);
+      setTables((prev) => prev.filter((t) => t._id !== id));
+    } catch (err) {
+      console.error("Error deleting table:", err);
+      alert("Failed to delete table.");
+    }
   };
 
   return (
@@ -67,16 +66,16 @@ export default function Tables() {
               <FaTrashAlt />
             </button>
 
+            {/* Updated order: Name first, number second */}
+            <div className="table-name">{t.tableName || "Table"}</div>
             <div className="table-number">
               {String(t.tableNumber).padStart(2, "0")}
             </div>
 
-            <div className="table-name">{t.tableName || "Table"}</div>
-
             <div className="table-footer">
               <FaChair className="chair-icon" />
               <span className="chair-count">
-                {t.size.toString().padStart(2, "0")}
+                {t.size?.toString().padStart(2, "0")}
               </span>
             </div>
           </div>
@@ -88,7 +87,7 @@ export default function Tables() {
         </div>
       </div>
 
-      {/* Popup Modal */}
+      {/* Modal for Creating Table */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
@@ -96,6 +95,7 @@ export default function Tables() {
             <CreateTable
               onCreate={(size, name) => addTable({ size, tableName: name })}
               onCancel={() => setShowModal(false)}
+              loading={loading}
             />
           </div>
         </div>
@@ -104,8 +104,7 @@ export default function Tables() {
   );
 }
 
-/* Create Table Modal Form */
-function CreateTable({ onCreate, onCancel }) {
+function CreateTable({ onCreate, onCancel, loading }) {
   const [name, setName] = useState("");
   const [size, setSize] = useState(2);
 
@@ -117,6 +116,7 @@ function CreateTable({ onCreate, onCancel }) {
         onChange={(e) => setName(e.target.value)}
         className="input-field"
       />
+
       <select
         value={size}
         onChange={(e) => setSize(Number(e.target.value))}
@@ -127,9 +127,14 @@ function CreateTable({ onCreate, onCancel }) {
         <option value={6}>6</option>
         <option value={8}>8</option>
       </select>
+
       <div className="modal-actions">
-        <button className="btn-create" onClick={() => onCreate(size, name)}>
-          Create
+        <button
+          className="btn-create"
+          onClick={() => onCreate(size, name)}
+          disabled={loading}
+        >
+          {loading ? "Creating..." : "Create"}
         </button>
         <button className="btn-cancel" onClick={onCancel}>
           Cancel

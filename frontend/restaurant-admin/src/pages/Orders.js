@@ -6,7 +6,7 @@ import "./Orders.css";
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState(null); // optional analytics data
+  const [stats, setStats] = useState(null); 
 
   // Fetch all orders
   const fetchOrders = async () => {
@@ -46,16 +46,17 @@ export default function Orders() {
   };
 
   // Handle status update
-  const updateStatus = async (id, status) => {
-    try {
-      await API.patch(`/orders/${id}`, { status });
-      await fetchOrders(); // refresh order list
-      await fetchAnalytics(); // refresh revenue & performance data
-    } catch (err) {
-      console.error("Failed to update order:", err);
-      alert("Failed to update order status");
-    }
-  };
+ const updateStatus = async (id, status) => {
+  try {
+    await API.patch(`/orders/${id}`, { status });
+    await fetchOrders(); // refresh order list
+    await fetchAnalytics(); // refresh revenue & performance data
+  } catch (err) {
+    console.error("Failed to update order:", err);
+    alert("Failed to update order status");
+  }
+};
+
 
   // Initial load
   useEffect(() => {
@@ -75,16 +76,6 @@ export default function Orders() {
           {orders.map((order) => (
             <OrderCard key={order._id} order={order} onUpdate={updateStatus} />
           ))}
-        </div>
-      )}
-
-      {/* Optional: analytics quick view */}
-      {stats && (
-        <div className="analytics-summary">
-          <h3>Quick Summary</h3>
-          <p>Total Revenue: ₹{stats.totalRevenue?.toFixed(2) || 0}</p>
-          <p>Total Orders: {stats.totalOrders || 0}</p>
-          <p>Active Tables: {stats.activeTables || 0}</p>
         </div>
       )}
     </div>

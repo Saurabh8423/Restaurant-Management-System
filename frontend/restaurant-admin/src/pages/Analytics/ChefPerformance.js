@@ -9,7 +9,7 @@ const ChefPerformance = React.forwardRef((props, ref) => {
     { name: "Rahul", orders: 0 },
   ]);
 
-  const chefIndex = useRef(0); // tracks next chef for assignment
+  const chefIndex = useRef(0); 
 
   // ---- public method to assign order ----
   const assignOrder = () => {

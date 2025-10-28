@@ -22,10 +22,13 @@ if (!fs.existsSync(uploadsPath)) {
   console.log(" 'uploads' folder created automatically");
 }
 
-app.use(cors({
-  origin: "http://localhost:3001",
-  credentials: true,                
-}));
+app.use(
+  cors({
+    origin: ["http://localhost:3000", "http://localhost:3001"],
+    credentials: true,
+  })
+);
+
 
 app.use(morgan("dev"));
 app.use(express.json());

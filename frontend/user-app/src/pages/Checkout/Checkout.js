@@ -9,6 +9,7 @@ import "./Checkout.css";
 export default function Checkout() {
   const navigate = useNavigate();
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem("rms_cart")) || []);
+  // eslint-disable-next-line no-unused-vars
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("rms_user")) || {});
   const [orderType, setOrderType] = useState("Dine In");
   const [cookVisible, setCookVisible] = useState(false);
@@ -16,6 +17,7 @@ export default function Checkout() {
   const [tables, setTables] = useState([]);
   const [search, setSearch] = useState("");
 
+  // Fetch tables
   useEffect(() => {
     api
       .get("/tables")
@@ -24,7 +26,7 @@ export default function Checkout() {
         setTables(t);
       })
       .catch(() => {
-        // fallback mock data if API fails
+        // fallback mock tables
         setTables(
           Array.from({ length: 30 }, (_, i) => ({
             tableNumber: i + 1,
@@ -35,10 +37,12 @@ export default function Checkout() {
       });
   }, []);
 
+  // Persist cart
   useEffect(() => {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
+  // Update quantity
   const updateQty = (id, delta) => {
     setCart((prev) => {
       const p = prev.find((x) => x.id === id);
@@ -57,13 +61,20 @@ export default function Checkout() {
     });
   };
 
+  // Calculate totals
   const computeTotals = () => {
     const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
     const delivery = orderType === "Take Away" ? 50 : 0;
     const taxes = 5;
-    return { itemsTotal, delivery, taxes, grandTotal: itemsTotal + delivery + taxes };
+    return {
+      itemsTotal,
+      delivery,
+      taxes,
+      grandTotal: itemsTotal + delivery + taxes,
+    };
   };
 
+  // Find available table
   const findTable = () => {
     const members = user?.members || 1;
     const sizes = [2, 4, 6, 8];
@@ -75,20 +86,21 @@ export default function Checkout() {
     return null;
   };
 
+  // Place order
   const handlePlaceOrder = async () => {
     if (cart.length === 0) {
-      alert("Cart is empty");
+      alert("Your cart is empty!");
       return;
     }
 
+    let tableNumber = null;
     if (orderType === "Dine In") {
       const table = findTable();
       if (!table) {
-        alert("All tables are full — please wait");
+        alert(" All tables are full. Please wait.");
         return;
       }
-
-      // Mark locally reserved + try backend update
+      tableNumber = table.tableNumber;
       setTables((prev) =>
         prev.map((t) =>
           t.tableNumber === table.tableNumber ? { ...t, reserved: true } : t
@@ -96,53 +108,83 @@ export default function Checkout() {
       );
       try {
         await api.patch(`/tables/${table.tableNumber}`, { reserved: true });
-      } catch (e) {
-        console.warn("Table reservation failed, proceeding locally.");
+      } catch {
+        console.warn(" Table reservation failed, proceeding locally.");
       }
     }
 
-    const payload = {
-      items: cart.map(c => ({ id: c.id, name: c.name, price: c.price, qty: c.qty })), // match user-app item shape
-      type: orderType,
-      tableNumber: orderType === "Dine In" ? (findTable()?.tableNumber ?? null) : null,
-      user,
+    const totals = computeTotals();
+    const orderData = {
+      orderId: `ODR-${Date.now()}`,
+      type: orderType === "Take Away" ? "Takeaway" : "Dine In",
+      tableNumber,
+      items: cart.map((item) => ({
+        name: item.name,
+        quantity: item.qty,
+        price: item.price,
+        image: item.image || "", //  Include image if exists
+      })),
+      totalAmount: totals.grandTotal,
+      clientName: user?.name || "Guest",
+      phoneNumber: user?.phone || "N/A",
+      address: orderType === "Take Away" ? user?.address || "N/A" : "Restaurant",
       instructions,
-      totals: computeTotals(),
-      timestamp: new Date().toISOString(),
+      totals,
+      user,
     };
 
-
     try {
-      await api.post("/orders", payload);
+      const res = await api.post("/orders", orderData);
+      if (res.status === 201 || res.status === 200) {
+        alert(" Order placed successfully!");
+        localStorage.removeItem("rms_cart");
+        setCart([]);
+        navigate("/thankyou");
+      }
     } catch (err) {
-      console.error("Order creation failed:", err);
-    } finally {
-      setCart([]);
-      localStorage.removeItem("rms_cart");
-      navigate("/thankyou");
+      console.error(" Order creation failed:", err);
+      alert(" Could not place order. Try again.");
     }
   };
 
+  // Dynamic greeting
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 12) return "morning";
+    if (h < 17) return "afternoon";
+    return "evening";
+  })();
+
   return (
     <div className="checkout-shell">
+      {/* Header greeting */}
       <header className="home-header">
         <div className="greet">
-          <div className="greet-large">Good {(() => {
-            const h = new Date().getHours();
-            if (h < 12) return "morning";
-            if (h < 17) return "afternoon";
-            return "evening";
-          })()}</div>
+          <div className="greet-large">Good {greeting}</div>
           <div className="greet-small">Place your order here</div>
         </div>
       </header>
 
+      {/* Search bar */}
       <SearchBar value={search} onChange={setSearch} />
 
+      {/* Cart items */}
       <div className="cart-items">
         {cart.map((it) => (
           <div className="cart-item" key={it.id}>
-            <div>
+            <div className="cart-img">
+              <img
+                src={
+                  it.image
+                    ? it.image.startsWith("http")
+                      ? it.image
+                      : `http://localhost:5000/${it.image}`
+                    : "/placeholder.png"
+                }
+                alt={it.name}
+              />
+            </div>
+            <div className="cart-info">
               <div className="ci-name">{it.name}</div>
               <div className="ci-price">₹{it.price}</div>
             </div>
@@ -155,7 +197,7 @@ export default function Checkout() {
         ))}
       </div>
 
-      {/* Cooking Instructions */}
+      {/* Add cooking instructions */}
       <div style={{ marginTop: 10 }}>
         <button className="add-instruction" onClick={() => setCookVisible(true)}>
           Add cooking instructions (optional)
@@ -168,8 +210,8 @@ export default function Checkout() {
         </div>
       )}
 
-      {/* Dine In / Take Away Switch */}
-      <div className="order-type">
+      {/* Dine In / Take Away toggle */}
+      <div className={`order-type ${orderType === "Take Away" ? "swap" : ""}`}>
         <button
           className={orderType === "Dine In" ? "active" : ""}
           onClick={() => setOrderType("Dine In")}
@@ -184,7 +226,7 @@ export default function Checkout() {
         </button>
       </div>
 
-      {/* Swipe to Order */}
+      {/* Swipe-to-order summary */}
       <CartSummary
         cart={cart}
         user={user}
@@ -192,6 +234,7 @@ export default function Checkout() {
         onPlaceOrder={handlePlaceOrder}
       />
 
+      {/* Cooking instruction modal */}
       <CookInstructionsModal
         visible={cookVisible}
         onClose={() => setCookVisible(false)}

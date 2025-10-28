@@ -1,31 +1,30 @@
 .tables-page h2 {
-  margin-top: 0;
-  font-size: 22px;
-  color: #111827;
+  padding: 15px 20px;
+  font-size: 24px;
+  color: #565656;
   font-weight: 600;
 }
 
 .tables-grid {
   display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 12px;
-  margin-top: 18px;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 14px;
+  padding: 20px;
 }
 
 .table-card {
   position: relative;
-  background: #F0F5F3;
+  background: #f0f5f3;
+  border-radius: 8px;
   border: 1.5px solid #e5e7eb;
-  border-radius: 5px;
-  padding: 12px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-  min-width: 80px;
+  padding: 10px 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   min-height: 90px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  transition: border-color 0.25s, transform 0.2s;
+  transition: all 0.2s ease;
 }
 
 .table-card:hover {
@@ -49,16 +48,18 @@
   color: #b91c1c;
 }
 
-.table-number {
+/* Name first, Number below */
+.table-name {
   font-size: 16px;
-  font-weight: 600;
   color: #111827;
-  margin-bottom: 4px;
+  font-weight: 500;
+  margin-bottom: 2px;
 }
 
-.table-name {
-  font-size: 12px;
-  color: #6b7280;
+.table-number {
+  font-size: 16px;
+  font-weight: bold;
+  color: #111827;
   margin-bottom: 6px;
 }
 
@@ -85,16 +86,15 @@
 
 /* Add Table Button */
 .add-table-card {
-  background: #f3f4f6;
+  background: #f9fafb;
   border: 2px dashed #d1d5db;
-  border-radius: 10px;
-  min-width: 80px;
+  border-radius: 8px;
   min-height: 90px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s ease;
 }
 
 .add-table-card:hover {
@@ -102,7 +102,7 @@
 }
 
 .plus-icon {
-  font-size: 24px;
+  font-size: 22px;
   color: #9ca3af;
 }
 
@@ -124,7 +124,7 @@
   background: white;
   padding: 20px 24px;
   border-radius: 10px;
-  width: 280px;
+  width: 260px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
@@ -133,6 +133,8 @@
   margin-bottom: 14px;
   text-align: center;
   color: #111827;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .modal-form {
@@ -162,6 +164,7 @@
   border-radius: 6px;
   padding: 6px 12px;
   cursor: pointer;
+  font-size: 13px;
 }
 
 .btn-cancel {
@@ -171,6 +174,7 @@
   border-radius: 6px;
   padding: 6px 12px;
   cursor: pointer;
+  font-size: 13px;
 }
 
 .btn-create:hover {

@@ -1,11 +1,39 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useSwipeable } from "react-swipeable";
+import { useNavigate } from "react-router-dom";
 import "./CartSummary.css";
 
-export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
+export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrder }) {
   const [swiped, setSwiped] = useState(false);
   const sliderRef = useRef(null);
+  const navigate = useNavigate();
 
+  //  Update item quantity (add / remove)
+  const updateQty = (id, delta) => {
+    setCart((prev) => {
+      const updated = prev
+        .map((item) =>
+          item.id === id ? { ...item, qty: Math.max(0, item.qty + delta) } : item
+        )
+        .filter((item) => item.qty > 0); // remove items with qty=0
+      return updated;
+    });
+  };
+
+  //  Calculate totals
+  const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
+  const delivery = orderType === "Take Away" ? 50 : 0;
+  const taxes = 5;
+  const grandTotal = itemsTotal + delivery + taxes;
+
+  // Redirect if cart empty
+  useEffect(() => {
+    if (cart.length === 0) {
+      setTimeout(() => navigate("/"), 300);
+    }
+  }, [cart, navigate]);
+
+  //  Swipe to place order
   const handleOrder = () => {
     if (!swiped) {
       setSwiped(true);
@@ -20,46 +48,61 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
     trackMouse: true,
   });
 
-  const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
-  const delivery = orderType === "Take Away" ? 50 : 0;
-  const taxes = 5;
-  const grandTotal = itemsTotal + delivery + taxes;
-
   return (
     <div className="summary-card">
-       {/* ------ PRICE SECTION ------ */}
+      {/*  CART ITEMS SECTION */}
+      <div className="cart-items">
+        <h3>Your Cart</h3>
+        {cart.map((item) => (
+          <div key={item.id} className="cart-item">
+            <div className="cart-item-left">
+              <span className="item-name">{item.name}</span>
+              <span className="item-price">₹{item.price}</span>
+            </div>
+            <div className="cart-item-right">
+              <button onClick={() => updateQty(item.id, -1)} className="qty-btn">
+                −
+              </button>
+              <span className="qty">{item.qty}</span>
+              <button onClick={() => updateQty(item.id, 1)} className="qty-btn">
+                +
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/*  PRICE SECTION */}
       <div className="price-section">
         <div className="row">
-        <span>Item Total</span>
-        <span>₹{itemsTotal.toFixed(2)}</span>
-      </div>
-
-      {orderType === "Take Away" && (
-        <div className="row">
-          <span>Delivery Charge</span>
-          <span>₹{delivery.toFixed(2)}</span>
+          <span>Item Total</span>
+          <span>₹{itemsTotal.toFixed(2)}</span>
         </div>
-      )}
 
-      <div className="row">
-        <span>Taxes</span>
-        <span>₹{taxes.toFixed(2)}</span>
+        {orderType === "Take Away" && (
+          <div className="row">
+            <span>Delivery Charge</span>
+            <span>₹{delivery.toFixed(2)}</span>
+          </div>
+        )}
+
+        <div className="row">
+          <span>Taxes</span>
+          <span>₹{taxes.toFixed(2)}</span>
+        </div>
+
+        <div className="row total">
+          <strong>Grand Total</strong>
+          <strong>₹{grandTotal.toFixed(2)}</strong>
+        </div>
       </div>
 
-      <div className="row total">
-        <strong>Grand Total</strong>
-        <strong>₹{grandTotal.toFixed(2)}</strong>
-      </div>
-      </div>
-
-
-{/* ------ YOUR DETAILS SECTION ------ */}
+      {/*  YOUR DETAILS */}
       <div className="your-details">
         <div className="yd-title">Your Details</div>
         <div className="yd-info">
           {user?.name} • {user?.phone}
         </div>
-
         <div className="user-line" />
 
         {orderType === "Take Away" ? (
@@ -120,11 +163,9 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
         )}
       </div>
 
-      {/* ------ SWIPE TO ORDER ------ */}
+      {/*  SWIPE TO ORDER */}
       <div className="swipe-track" {...handlers} ref={sliderRef}>
-        <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>
-          ➡
-        </div>
+        <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>➡</div>
         <span className={`swipe-text ${swiped ? "done" : ""}`}>
           {swiped ? "Order Placed!" : "Swipe to Order"}
         </span>
