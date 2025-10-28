@@ -19,16 +19,19 @@ const app = express();
 const uploadsPath = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
-  console.log(" 'uploads' folder created automatically");
+  console.log("📁 'uploads' folder created automatically");
 }
 
+// Correct CORS Setup (no trailing slashes)
 app.use(
   cors({
-    origin: ["https://restaurant-management-system-puce.vercel.app/", "https://restaurant-management-system-yny5.vercel.app/analytics"],
+    origin: [
+      "https://restaurant-management-system-puce.vercel.app",
+      "https://restaurant-management-system-yny5.vercel.app",
+    ],
     credentials: true,
   })
 );
-
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -36,6 +39,7 @@ app.use(express.json());
 // Serve uploaded images statically
 app.use("/uploads", express.static(uploadsPath));
 
+// Connect Database
 connectDB();
 
 // Routes
@@ -45,9 +49,10 @@ app.use("/api/chefs", chefRoutes);
 app.use("/api/menu", menuRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
+// Default Route
 app.get("/", (req, res) =>
   res.json({ success: true, message: "🍽️ Restaurant API running..." })
 );
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

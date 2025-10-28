@@ -6,16 +6,15 @@ import "./Orders.css";
 export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
+  // eslint-disable-next-line no-unused-vars
   const [stats, setStats] = useState(null); 
 
-  // Fetch all orders
   const fetchOrders = async () => {
     try {
       const res = await API.get("/orders");
       setOrders(res.data || []);
     } catch (err) {
       console.error("Failed to fetch orders:", err);
-      // fallback for UI
       setOrders([
         {
           _id: "o1",
@@ -35,7 +34,6 @@ export default function Orders() {
     }
   };
 
-  // Fetch analytics after updates (optional)
   const fetchAnalytics = async () => {
     try {
       const res = await API.get("/analytics");
@@ -45,24 +43,21 @@ export default function Orders() {
     }
   };
 
-  // Handle status update
- const updateStatus = async (id, status) => {
-  try {
-    await API.patch(`/orders/${id}`, { status });
-    await fetchOrders(); // refresh order list
-    await fetchAnalytics(); // refresh revenue & performance data
-  } catch (err) {
-    console.error("Failed to update order:", err);
-    alert("Failed to update order status");
-  }
-};
+  const updateStatus = async (id, status) => {
+    try {
+      await API.patch(`/orders/${id}`, { status });
+      await fetchOrders();
+      await fetchAnalytics();
+    } catch (err) {
+      console.error("Failed to update order:", err);
+      alert("Failed to update order status");
+    }
+  };
 
-
-  // Initial load
   useEffect(() => {
     fetchOrders();
     fetchAnalytics();
-  }, []);
+  }, []); // safe since both are stable functions
 
   return (
     <div className="orders-page">
