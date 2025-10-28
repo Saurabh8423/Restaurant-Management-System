@@ -1,4 +1,3 @@
-
 import React from "react";
 import "./CategoryTabs.css";
 import {
@@ -29,7 +28,7 @@ export default function CategoryTabs({ categories, selected, onSelect }) {
             onClick={() => onSelect(cat)}
           >
             <div className="cat-icon">
-              {/* ✅ fallback icon for unknown categories */}
+              {/*  fallback icon for unknown categories */}
               {icons[cat] || icons.Default}
             </div>
             <span className="cat-label">{cat}</span>

@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 const CATEGORIES = ["Burger", "Pizza", "Drink", "French fries", "Veggies"];
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://restaurant-management-system-backend-8ku8.onrender.com";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function Home() {
   const perPage = 8;
   const listRef = useRef();
 
-  // ✅ Match category (handles case, spacing, plural forms)
+  // Match category (handles case, spacing, plural forms)
   const matchCategory = (catFromDB, selectedCat) => {
     if (!catFromDB || !selectedCat) return false;
     const c1 = catFromDB.toLowerCase().replace(/\s+/g, "");
@@ -42,7 +42,7 @@ export default function Home() {
     );
   };
 
-  // ✅ Fetch menu items from backend
+  //  Fetch menu items from backend
   useEffect(() => {
     const fetchMenu = async () => {
       try {
@@ -59,7 +59,7 @@ export default function Home() {
               : "/default-food.png",
           }));
 
-          // ✅ Set items & visibleItems correctly
+          //  Set items & visibleItems correctly
           setItems(menuItems);
           setVisibleItems(
             menuItems
@@ -90,7 +90,7 @@ export default function Home() {
     fetchMenu();
   }, [selected]);
 
-  // ✅ Search + Category filter
+  //  Search + Category filter
   useEffect(() => {
     const filtered = items.filter(
       (i) =>
@@ -100,12 +100,12 @@ export default function Home() {
     setVisibleItems(filtered.slice(0, perPage));
   }, [selected, items, search]);
 
-  // ✅ Persist cart
+  //  Persist cart
   useEffect(() => {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
-  // ✅ Add / Remove items from cart
+  //  Add / Remove items from cart
   const onAdd = (item, delta) => {
     setCart((prev) => {
       const exists = prev.find((p) => p._id === item._id);
@@ -136,7 +136,7 @@ export default function Home() {
 
   const qtyOf = (id) => cart.find((c) => c._id === id)?.qty || 0;
 
-  // ✅ Infinite scroll
+  //  Infinite scroll
   const loadMore = () => {
     const filtered = items.filter(
       (i) =>

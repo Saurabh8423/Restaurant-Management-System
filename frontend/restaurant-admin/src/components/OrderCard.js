@@ -14,7 +14,7 @@ export default function OrderCard({ order, onUpdate }) {
   // When clicking "Processing"
   const handleProcessingClick = () => {
     setStatus("Served"); // Update UI instantly
-    if (onUpdate) onUpdate(order._id, "Served"); // Notify backend if needed
+    if (onUpdate) onUpdate(order._id, "Served"); 
   };
 
   const getCardClass = () => {

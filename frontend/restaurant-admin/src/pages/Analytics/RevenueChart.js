@@ -24,7 +24,7 @@ export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter
         <TimeFilter selected={revenueFilter} setSelected={setRevenueFilter} />
       </div>
 
-      {/* ✅ White chart background container */}
+      {/*  White chart background container */}
       <div className="revenue-chart-container">
         <ResponsiveContainer width="100%" height={180}>
           <LineChart data={lineData}>

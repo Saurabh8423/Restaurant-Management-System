@@ -8,7 +8,7 @@ import TablesOverview from "./TablesOverview";
 import ChefPerformance from "./ChefPerformance";
 
 export default function Analytics() {
-  // ✅ initialize all states with safe defaults
+  //  initialize all states with safe defaults
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -61,7 +61,7 @@ export default function Analytics() {
       );
       const data = response.data || {};
 
-      // ✅ safely update states
+      //  safely update states
       setStats(data.stats || {});
       setOrders(data.orders || {});
       setRevenueData(data.revenue || []);
