@@ -3,7 +3,7 @@ import Chef from "../models/chefModel.js";
 
 const router = express.Router();
 
-// ✅ Add multiple chefs at once
+// Add multiple chefs at once
 router.post("/", async (req, res) => {
   try {
     const chefs = await Chef.insertMany(req.body);
