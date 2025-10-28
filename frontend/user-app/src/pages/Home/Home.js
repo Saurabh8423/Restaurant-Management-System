@@ -4,6 +4,7 @@ import CategoryTabs from "../../components/CategoryTabs/CategoryTabs";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import FoodCard from "../../components/FoodCard/FoodCard";
 import DetailsModal from "../../components/DetailsModal/DetailsModal";
+// import ITEMS from "../../data/items";
 import { useNavigate } from "react-router-dom";
 import "./Home.css";
 

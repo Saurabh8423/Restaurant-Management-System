@@ -44,31 +44,62 @@
   border: 1px solid #e6eee9;
   background-color: #f8f8f8;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 .ci-controls button:hover {
   background-color: #e7e7e7;
 }
 
+/* ---ORDER TYPE  ------ */
 .order-type {
   display: flex;
-  gap: 8px;
-  margin: 10px 0;
+  align-items: center;
+  justify-content: space-between;
+  width: 400px;
+  background: #afb0b0;
+  border-radius: 30px;
+  padding: 6px;
+  margin: 14px 0;
+  position: relative;
 }
 
 .order-type button {
-  padding: 8px 12px;
-  border-radius: 20px;
-  border: 1px solid #e6eee9;
-  background: #fff;
+   flex: 1;
+  padding: 12px 0;
+  border: none;
+  background: transparent;
+  border-radius: 30px;
+  color: #333;
+  font-weight: 600;
+  transition: color 0.3s ease;
+  z-index: 2;
+  position: relative;
   cursor: pointer;
-  transition: background 0.2s ease-in-out;
 }
 
 .order-type button.active {
   background: #16a34a;
-  color: #fff;
+  color: #181818;
   border: none;
+}
+
+.order-type::before {
+  content: "";
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  background: rgb(232, 231, 231);
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  z-index: 1;
+}
+
+/* Moves highlight when switched */
+.order-type.swap::before {
+  left: calc(50% + 0px);
 }
 
 .btn {
@@ -77,6 +108,8 @@
   border: 1px solid #ddd;
   background: #fff;
   cursor: pointer;
+  margin-top: -80px;
+  transition: background 0.2s ease;
 }
 
 .btn:hover {
@@ -85,11 +118,31 @@
 
 /* ✅ Cooking instructions summary */
 .cook-summary {
-  background-color: #f0fff4;
-  border: 1px solid #d1fae5;
-  border-radius: 8px;
-  padding: 10px;
-  margin-top: 12px;
-  color: #065f46;
-  font-size: 15px;
+  margin-top: 18px;
+  margin-bottom: 12px;
+  border: none;
+  border-bottom: 2px dotted #94d3a2;
+  padding-bottom: 6px;
+  color: #333;
+  font-size: 14px;
+}
+
+.add-instruction {
+  display: block;
+  width: 100%;
+  font-size: 14px;
+  color: #999;
+  border: none;
+  border-bottom: 2px dotted #ccc;
+  padding: 6px 0;
+  margin-top: 8px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.add-instruction:hover {
+  color: #666;
+  border-bottom-color: #aaa;
 }

@@ -3,6 +3,7 @@ import api from "../../api/axios";
 import CartSummary from "../../components/CartSummary/CartSummary";
 import CookInstructionsModal from "../../components/CookInstructionsModal/CookInstructionsModal";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "../../components/SearchBar/SearchBar";
 import "./Checkout.css";
 
 export default function Checkout() {
@@ -13,6 +14,7 @@ export default function Checkout() {
   const [cookVisible, setCookVisible] = useState(false);
   const [instructions, setInstructions] = useState("");
   const [tables, setTables] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     api
@@ -123,7 +125,19 @@ export default function Checkout() {
 
   return (
     <div className="checkout-shell">
-      <h2>Cart</h2>
+      <header className="home-header">
+        <div className="greet">
+          <div className="greet-large">Good {(() => {
+            const h = new Date().getHours();
+            if (h < 12) return "morning";
+            if (h < 17) return "afternoon";
+            return "evening";
+          })()}</div>
+          <div className="greet-small">Place your order here</div>
+        </div>
+      </header>
+
+      <SearchBar value={search} onChange={setSearch} />
 
       <div className="cart-items">
         {cart.map((it) => (
@@ -141,6 +155,20 @@ export default function Checkout() {
         ))}
       </div>
 
+      {/* Cooking Instructions */}
+      <div style={{ marginTop: 10 }}>
+        <button className="add-instruction" onClick={() => setCookVisible(true)}>
+          Add cooking instructions (optional)
+        </button>
+      </div>
+
+      {instructions && (
+        <div className="cook-summary">
+          <strong>Cooking Instructions:</strong> {instructions}
+        </div>
+      )}
+
+      {/* Dine In / Take Away Switch */}
       <div className="order-type">
         <button
           className={orderType === "Dine In" ? "active" : ""}
@@ -156,19 +184,7 @@ export default function Checkout() {
         </button>
       </div>
 
-      <div style={{ marginTop: 10 }}>
-        <button className="btn" onClick={() => setCookVisible(true)}>
-          Add cooking instructions
-        </button>
-      </div>
-
-      {/* Show saved cooking instructions summary */}
-      {instructions && (
-        <div className="cook-summary">
-          <strong>Cooking Instructions:</strong> {instructions}
-        </div>
-      )}
-
+      {/* Swipe to Order */}
       <CartSummary
         cart={cart}
         user={user}

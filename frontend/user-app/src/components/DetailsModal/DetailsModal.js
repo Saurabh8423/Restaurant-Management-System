@@ -50,9 +50,13 @@ export default function DetailsModal({ visible, onSave }) {
             <div className="dm-card">
                 <h3>Enter Your Details</h3>
                 <input placeholder="Full name" value={name} onChange={e => setName(e.target.value)} />
+
                 <input type="number" min="1" max="8" placeholder="Number of Person (max 8)" value={members} onChange={e => setMembers(Math.max(1, Math.min(8, Number(e.target.value))))} />
+
                 <input placeholder="Address" value={address} onChange={e => setAddress(e.target.value)} />
+
                 <input placeholder="Contact (mobile number)" value={phone} onChange={e => setPhone(e.target.value)} />
+                
                 <div className="dm-actions">
                     <button onClick={handleSave} className="btn-save" disabled={saving}>{saving ? "Saving..." : "Order Now"}</button>
                 </div>
