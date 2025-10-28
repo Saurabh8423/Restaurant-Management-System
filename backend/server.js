@@ -24,7 +24,7 @@ if (!fs.existsSync(uploadsPath)) {
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://localhost:3001"],
+    origin: ["https://restaurant-management-system-puce.vercel.app/", "https://restaurant-management-system-yny5.vercel.app/analytics"],
     credentials: true,
   })
 );
