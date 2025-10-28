@@ -6,8 +6,11 @@ import OrderSummary from "./OrderSummary";
 import RevenueChart from "./RevenueChart";
 import TablesOverview from "./TablesOverview";
 import ChefPerformance from "./ChefPerformance";
+import { useSearch } from "../../context/SearchContext";
 
 export default function Analytics() {
+  const { searchTerm } = useSearch();
+
   const [stats, setStats] = useState({
     totalRevenue: 0,
     totalOrders: 0,
@@ -25,7 +28,6 @@ export default function Analytics() {
 
   const chefs = ["Mohan", "Pritam", "Yash", "Rahul"];
 
-  // ✅ Wrapped in useCallback for stability
   const generateChefPerformance = useCallback((totalOrders = 20) => {
     const performance = chefs.map((chef) => ({
       name: chef,
@@ -48,7 +50,6 @@ export default function Analytics() {
     return performance;
   }, [chefs]);
 
-  // ✅ Added generateChefPerformance as dependency
   const fetchAnalyticsData = useCallback(
     async (selectedFilter) => {
       try {
@@ -77,28 +78,63 @@ export default function Analytics() {
     fetchAnalyticsData(filter);
   }, [filter, fetchAnalyticsData]);
 
+  // ===== Blur Logic =====
+  const getBlurClass = (section) => {
+    if (!searchTerm) return ""; // nothing blurred
+    const term = searchTerm.toLowerCase();
+
+    // Chef section never blurs
+    if (section === "chef") return "";
+
+    // Show only matched section
+    if (term.includes("total") && section === "stats") return "";
+    if (term.includes("total revenue") && section === "totalRevenue") return "";
+    if (term.includes("total orders") && section === "totalOrders") return "";
+    if (term.includes("order summary") && section === "orderSummary") return "";
+    if (term.includes("revenue") && section === "revenueChart") return "";
+    if (term.includes("tables") && section === "tablesOverview") return "";
+
+    // Blur everything else
+    return "blurred";
+  };
+
   return (
     <div className="analytics-page">
       <h3>Analytics</h3>
-      <StatsRow stats={stats} />
 
-      <div className="analytics-grid">
-        <OrderSummary
-          served={orders?.served || 0}
-          dineIn={orders?.dineIn || 0}
-          takeAway={orders?.takeAway || 0}
-          filter={filter}
-          setFilter={setFilter}
-        />
-        <RevenueChart
-          lineData={revenueData}
-          revenueFilter={filter}
-          setRevenueFilter={setFilter}
-        />
-        <TablesOverview />
+      {/* ==== Stats Row ==== */}
+      <div className={getBlurClass("stats")}>
+        <StatsRow stats={stats} />
       </div>
 
-      <ChefPerformance chefPerformance={chefPerformance} />
+      <div className="analytics-grid">
+        <div className={getBlurClass("orderSummary")}>
+          <OrderSummary
+            served={orders?.served || 0}
+            dineIn={orders?.dineIn || 0}
+            takeAway={orders?.takeAway || 0}
+            filter={filter}
+            setFilter={setFilter}
+          />
+        </div>
+
+        <div className={getBlurClass("revenueChart")}>
+          <RevenueChart
+            lineData={revenueData}
+            revenueFilter={filter}
+            setRevenueFilter={setFilter}
+          />
+        </div>
+
+        <div className={getBlurClass("tablesOverview")}>
+          <TablesOverview />
+        </div>
+      </div>
+
+      {/* Chef section never blurs */}
+      <div className={getBlurClass("chef")}>
+        <ChefPerformance chefPerformance={chefPerformance} />
+      </div>
 
       {loading && (
         <p style={{ textAlign: "center", fontSize: "12px" }}>
