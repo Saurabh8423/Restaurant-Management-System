@@ -3,32 +3,49 @@ import Chef from "../models/chefModel.js";
 
 export const getAnalytics = async (req, res) => {
   try {
-    // basic stats
+    // === BASIC STATS ===
     const totalOrders = await Order.countDocuments();
     const totalChefs = await Chef.countDocuments();
+
     const revenueAgg = await Order.aggregate([
       { $group: { _id: null, total: { $sum: "$totalAmount" } } },
     ]);
     const totalRevenue = revenueAgg[0]?.total || 0;
-    const totalClients = await Order.distinct("phoneNumber").then((arr) => arr.filter(Boolean).length);
 
-    // order breakdown by status and type
+    const totalClients = await Order.distinct("phoneNumber").then((arr) =>
+      arr.filter(Boolean).length
+    );
+
+    // === ORDERS BREAKDOWN ===
     const statusAgg = await Order.aggregate([
       { $group: { _id: "$status", count: { $sum: 1 } } },
     ]);
     const typeAgg = await Order.aggregate([
       { $group: { _id: "$type", count: { $sum: 1 } } },
     ]);
+
     const orders = {
       served: statusAgg.find((s) => s._id === "Served")?.count || 0,
       processing: statusAgg.find((s) => s._id === "Processing")?.count || 0,
       done: statusAgg.find((s) => s._id === "Done")?.count || 0,
       dineIn: typeAgg.find((t) => t._id === "Dine In")?.count || 0,
-      takeAway: typeAgg.find((t) => t._id === "Takeaway" || t._id === "Take Away")?.count || 0,
+      takeAway:
+        typeAgg.find(
+          (t) => t._id === "Takeaway" || t._id === "Take Away"
+        )?.count || 0,
     };
 
-    // revenue timeseries (last 7 days)
+    // === DAY-WISE REVENUE (LAST 7 DAYS) ===
+    const today = new Date();
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(today.getDate() - 6);
+
     const revenueSeries = await Order.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: sevenDaysAgo, $lte: today },
+        },
+      },
       {
         $group: {
           _id: {
@@ -38,23 +55,21 @@ export const getAnalytics = async (req, res) => {
         },
       },
       { $sort: { _id: 1 } },
-      { $limit: 30 },
     ]);
 
-    // format revenueSeries as [{ name: '2025-10-27', value: 1234 }, ...]
-    const revenue = revenueSeries.map((r) => ({ name: r._id, value: r.total }));
+    // === Format for frontend [{ date, revenue }] ===
+    const revenue = revenueSeries.map((r) => ({
+      date: r._id,
+      revenue: r.total,
+    }));
 
     res.json({
-      stats: {
-        totalOrders,
-        totalChefs,
-        totalRevenue,
-        totalClients,
-      },
+      stats: { totalOrders, totalChefs, totalRevenue, totalClients },
       orders,
       revenue,
     });
   } catch (error) {
+    console.error("Error fetching analytics:", error);
     res.status(500).json({ message: error.message });
   }
 };

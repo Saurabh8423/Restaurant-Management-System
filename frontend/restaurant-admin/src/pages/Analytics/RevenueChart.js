@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import {
   BarChart,
   Bar,
@@ -12,7 +12,6 @@ import { FaAngleDown } from "react-icons/fa6";
 import ChartCard from "../../components/ChartCard";
 import "./RevenueChart.css";
 
-// Dropdown filter for time range
 const TimeFilter = ({ selected, setSelected }) => (
   <div className="time-filter">
     <select value={selected} onChange={(e) => setSelected(e.target.value)}>
@@ -26,51 +25,51 @@ const TimeFilter = ({ selected, setSelected }) => (
 );
 
 export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter }) {
-  const [weeklyData, setWeeklyData] = useState([]);
-
-  useEffect(() => {
-    //  Simulate day-wise data for Mon–Sun
-    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-    const data = days.map((day) => ({
-      name: day,
-      orders: Math.floor(Math.random() * 120) + 20, // Random order count
+  // === Convert API date data → day-wise data (Mon–Sun)
+  const dayWiseData = useMemo(() => {
+    const dayMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const result = Array(7).fill(null).map((_, i) => ({
+      day: dayMap[i],
+      revenue: 0,
     }));
-    setWeeklyData(data);
-  }, [lineData, revenueFilter]);
+
+    if (Array.isArray(lineData)) {
+      lineData.forEach((item) => {
+        if (item.date && item.revenue != null) {
+          const dayIndex = new Date(item.date).getDay();
+          result[dayIndex].revenue += item.revenue;
+        }
+      });
+    }
+    return result;
+  }, [lineData]);
 
   return (
     <ChartCard title="Revenue" className="revenue-card">
       <div className="chart-header-controls">
-        <p className="placeholder-text">Day-wise order performance</p>
+        <p className="placeholder-text">Revenue performance overview</p>
         <TimeFilter selected={revenueFilter} setSelected={setRevenueFilter} />
       </div>
 
-      {/* Chart Container */}
       <div className="revenue-chart-container">
-        <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={weeklyData}>
-            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-            <XAxis
-              dataKey="name"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fill: "#4b5563", fontSize: 12 }}
-            />
-            <YAxis hide={true} />
+        <ResponsiveContainer width="100%" height={220}>
+          <BarChart data={dayWiseData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="day" axisLine={false} tickLine={false} />
+            <YAxis hide />
             <Tooltip
               contentStyle={{
                 backgroundColor: "#ffffff",
                 border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                fontSize: "12px",
+                borderRadius: "6px",
               }}
-              formatter={(value) => [`${value} orders`, "Orders"]}
+              labelStyle={{ color: "#374151" }}
             />
             <Bar
-              dataKey="orders"
-              fill="#1f2937"
-              radius={[6, 6, 0, 0]}
+              dataKey="revenue"
+              fill="#4f46e5"
               barSize={30}
+              radius={[6, 6, 0, 0]}
             />
           </BarChart>
         </ResponsiveContainer>
