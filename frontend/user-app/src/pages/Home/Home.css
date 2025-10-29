@@ -63,3 +63,10 @@
     border-radius: 18px;
     border: none;
 }
+
+/* Blur background when modal visible */
+.home-shell.modal-active {
+  filter: blur(1.2px);
+  pointer-events: none;
+  user-select: none;
+}

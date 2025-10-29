@@ -5,30 +5,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 200;
+    z-index: 300;
+    backdrop-filter: blur(1px);
     overflow-y: auto;
     padding-top: 40px;
 }
 
 .dm-card {
-    background: #fff;
-    border-radius: 16px 16px 0 0;
-    width: 100%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    width: 90%;
     max-width: 368px;
     /* height: 370px; */
     padding: 24px 20px;
-    animation: slideDown 0.4s ease;
+    animation: scaleIn 0.3s ease;
     box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.1);
 }
 
 @keyframes slideDown {
     from {
-        transform: translateY(-30px);
+        transform: scale(0.95);
         opacity: 0;
     }
 
     to {
-        transform: translateY(0);
+        transform: scale(1);
         opacity: 1;
     }
 }
@@ -37,14 +38,14 @@
     font-size: 18px;
     font-weight: 600;
     color: #222;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
     text-align: center;
 }
 
 .dm-card input {
     width: 90%;
-    padding: 10px 12px;
-    border: 1px solid #e6e6e6;
+    padding:  12px;
+    border: 1px solid #d1d5db;
     border-radius: 10px;
     margin-bottom: 10px;
     font-size: 15px;
@@ -54,6 +55,7 @@
 
 .dm-card input:focus {
     border-color: #16a34a;
+    background: #f9fafb;
 }
 
 .dm-actions {
@@ -64,7 +66,7 @@
 
 .btn-save {
     width: 100%;
-    background: #16a34a;
+    background: #000;
     border: none;
     color: white;
     font-size: 16px;
@@ -76,7 +78,7 @@
 }
 
 .btn-save:hover {
-    background: #0f8a3c;
+    background: #111;
 }
 
 .btn-save:disabled {

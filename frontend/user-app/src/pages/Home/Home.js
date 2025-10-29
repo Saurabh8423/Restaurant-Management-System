@@ -161,55 +161,61 @@ export default function Home() {
   };
 
   return (
-    <div className="home-shell">
-      <DetailsModal visible={showDetails} onSave={handleDetailsSave} />
-
-      <header className="home-header">
-        <div className="greet">
-          <div className="greet-large">
-            Good{" "}
-            {(() => {
-              const h = new Date().getHours();
-              if (h < 12) return "morning";
-              if (h < 17) return "afternoon";
-              return "evening";
-            })()}
+    <>
+      <div className={`home-shell ${showDetails ? "modal-active" : ""}`}>
+        <header className="home-header">
+          <div className="greet">
+            <div className="greet-large">
+              Good{" "}
+              {(() => {
+                const h = new Date().getHours();
+                if (h < 12) return "morning";
+                if (h < 17) return "afternoon";
+                return "evening";
+              })()}
+            </div>
+            <div className="greet-small">Place your order here</div>
           </div>
-          <div className="greet-small">Place your order here</div>
+        </header>
+
+        <div className="search-row">
+          <SearchBar value={search} onChange={setSearch} />
+          <div className="cart-total">
+            ₹{cart.reduce((s, c) => s + c.qty * c.price, 0)}
+          </div>
         </div>
-      </header>
 
-      <div className="search-row">
-        <SearchBar value={search} onChange={setSearch} />
-        <div className="cart-total">
-          ₹{cart.reduce((s, c) => s + c.qty * c.price, 0)}
+        <CategoryTabs
+          categories={categories}
+          selected={selected}
+          onSelect={setSelected}
+        />
+
+        <div className="category-title">{selected}</div>
+
+        <div className="items-grid" onScroll={onScroll} ref={listRef}>
+          {visibleItems.map((it) => (
+            <FoodCard
+              key={it._id}
+              item={it}
+              qty={qtyOf(it._id)}
+              onChangeQty={onAdd}
+            />
+          ))}
+        </div>
+
+        <div className="next-fixed">
+          <button className="btn-next" onClick={() => navigate("/checkout")}>
+            Next
+          </button>
         </div>
       </div>
 
-      <CategoryTabs
-        categories={categories}
-        selected={selected}
-        onSelect={setSelected}
-      />
-
-      <div className="category-title">{selected}</div>
-
-      <div className="items-grid" onScroll={onScroll} ref={listRef}>
-        {visibleItems.map((it) => (
-          <FoodCard
-            key={it._id}
-            item={it}
-            qty={qtyOf(it._id)}
-            onChangeQty={onAdd}
-          />
-        ))}
-      </div>
-
-      <div className="next-fixed">
-        <button className="btn-next" onClick={() => navigate("/checkout")}>
-          Next
-        </button>
-      </div>
-    </div>
+      {/* Modal appears over blurred background */}
+      {showDetails && (
+        <DetailsModal visible={showDetails} onSave={handleDetailsSave} />
+      )}
+    </>
   );
+
 }
