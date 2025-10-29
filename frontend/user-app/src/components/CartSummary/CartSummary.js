@@ -1,39 +1,12 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { useSwipeable } from "react-swipeable";
-import { useNavigate } from "react-router-dom";
 import "./CartSummary.css";
 
-export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrder }) {
+export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
   const [swiped, setSwiped] = useState(false);
   const sliderRef = useRef(null);
-  const navigate = useNavigate();
+  
 
-  //  Update item quantity (add / remove)
-  const updateQty = (id, delta) => {
-    setCart((prev) => {
-      const updated = prev
-        .map((item) =>
-          item.id === id ? { ...item, qty: Math.max(0, item.qty + delta) } : item
-        )
-        .filter((item) => item.qty > 0); // remove items with qty=0
-      return updated;
-    });
-  };
-
-  //  Calculate totals
-  const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
-  const delivery = orderType === "Take Away" ? 50 : 0;
-  const taxes = 5;
-  const grandTotal = itemsTotal + delivery + taxes;
-
-  // Redirect if cart empty
-  useEffect(() => {
-    if (cart.length === 0) {
-      setTimeout(() => navigate("/"), 300);
-    }
-  }, [cart, navigate]);
-
-  //  Swipe to place order
   const handleOrder = () => {
     if (!swiped) {
       setSwiped(true);
@@ -48,31 +21,16 @@ export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrd
     trackMouse: true,
   });
 
-  return (
-    <div className="summary-card">
-      {/*  CART ITEMS SECTION */}
-      <div className="cart-items">
-        <h3>Your Cart</h3>
-        {cart.map((item) => (
-          <div key={item.id} className="cart-item">
-            <div className="cart-item-left">
-              <span className="item-name">{item.name}</span>
-              <span className="item-price">₹{item.price}</span>
-            </div>
-            <div className="cart-item-right">
-              <button onClick={() => updateQty(item.id, -1)} className="qty-btn">
-                −
-              </button>
-              <span className="qty">{item.qty}</span>
-              <button onClick={() => updateQty(item.id, 1)} className="qty-btn">
-                +
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+  const itemsTotal = cart.reduce((s, c) => s + c.qty * c.price, 0);
+  const delivery = orderType === "Take Away" ? 50 : 0;
+  const taxes = 5;
+  const grandTotal = itemsTotal + delivery + taxes;
 
-      {/*  PRICE SECTION */}
+  return (
+     
+    <div className="summary-card">
+      {/* ------ PRICE SECTION ------ */}
+     
       <div className="price-section">
         <div className="row">
           <span>Item Total</span>
@@ -80,7 +38,7 @@ export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrd
         </div>
 
         {orderType === "Take Away" && (
-          <div className="row">
+          <div className="row delivery">
             <span>Delivery Charge</span>
             <span>₹{delivery.toFixed(2)}</span>
           </div>
@@ -97,12 +55,13 @@ export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrd
         </div>
       </div>
 
-      {/*  YOUR DETAILS */}
+      {/* ------ YOUR DETAILS SECTION ------ */}
       <div className="your-details">
-        <div className="yd-title">Your Details</div>
+        <div className="yd-title">Your details</div>
         <div className="yd-info">
           {user?.name} • {user?.phone}
         </div>
+
         <div className="user-line" />
 
         {orderType === "Take Away" ? (
@@ -163,8 +122,13 @@ export default function CartSummary({ cart, setCart, user, orderType, onPlaceOrd
         )}
       </div>
 
-      {/*  SWIPE TO ORDER */}
-      <div className="swipe-track" {...handlers} ref={sliderRef}>
+      {/* ------ SWIPE TO ORDER ------ */}
+      <div
+        className="swipe-track"
+        {...handlers}
+        ref={sliderRef}
+        onClick={handleOrder}
+      >
         <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>➡</div>
         <span className={`swipe-text ${swiped ? "done" : ""}`}>
           {swiped ? "Order Placed!" : "Swipe to Order"}
