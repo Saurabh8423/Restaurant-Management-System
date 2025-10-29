@@ -52,12 +52,12 @@
     left: 0;
     right: 0;
     bottom: 16px;
-    display: flex;
+    display: flex;  
     justify-content: center;
 }
 
 .btn-next {
-    background: #374151;
+    background: #505050;
     color: #fff;
     padding: 12px 36px;
     border-radius: 18px;

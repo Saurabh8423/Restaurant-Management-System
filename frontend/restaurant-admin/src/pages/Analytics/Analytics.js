@@ -78,23 +78,41 @@ export default function Analytics() {
     fetchAnalyticsData(filter);
   }, [filter, fetchAnalyticsData]);
 
-  // ===== Blur Logic =====
+  // ===== Improved Blur Logic =====
   const getBlurClass = (section) => {
-    if (!searchTerm) return ""; // nothing blurred
-    const term = searchTerm.toLowerCase();
+    if (!searchTerm) return ""; // nothing blurred if input is empty
+    const term = searchTerm.toLowerCase().trim();
 
     // Chef section never blurs
     if (section === "chef") return "";
 
-    // Show only matched section
-    if (term.includes("total") && section === "stats") return "";
-    if (term.includes("total revenue") && section === "totalRevenue") return "";
-    if (term.includes("total orders") && section === "totalOrders") return "";
-    if (term.includes("order summary") && section === "orderSummary") return "";
-    if (term.includes("revenue") && section === "revenueChart") return "";
-    if (term.includes("tables") && section === "tablesOverview") return "";
+    // === Total Stats ===
+    if (
+      term.includes("total") ||
+      term.includes("total revenue") ||
+      term.includes("total orders") ||
+      term.includes("total clients") ||
+      term.includes("total chef")
+    ) {
+      return section === "stats" ? "" : "blurred";
+    }
 
-    // Blur everything else
+    // === Order Summary ===
+    if (term.includes("order") || term.includes("summary")) {
+      return section === "orderSummary" ? "" : "blurred";
+    }
+
+    // === Revenue Chart ===
+    if (term.includes("revenue")) {
+      return section === "revenueChart" ? "" : "blurred";
+    }
+
+    // === Tables Overview ===
+    if (term.includes("table") || term.includes("tables")) {
+      return section === "tablesOverview" ? "" : "blurred";
+    }
+
+    // Default: blur everything else
     return "blurred";
   };
 

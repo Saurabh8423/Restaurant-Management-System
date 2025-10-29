@@ -19,7 +19,7 @@ const app = express();
 const uploadsPath = path.join(process.cwd(), "uploads");
 if (!fs.existsSync(uploadsPath)) {
   fs.mkdirSync(uploadsPath, { recursive: true });
-  console.log("📁 'uploads' folder created automatically");
+  console.log(" 'uploads' folder created automatically");
 }
 
 // Correct CORS Setup (no trailing slashes)
@@ -55,4 +55,4 @@ app.get("/", (req, res) =>
 );
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(` Server running on port ${PORT}`));
