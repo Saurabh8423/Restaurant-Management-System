@@ -67,7 +67,7 @@ export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter
             />
             <Bar
               dataKey="revenue"
-              fill="#4f46e5"
+              fill="#5a5d64ff"
               barSize={30}
               radius={[6, 6, 0, 0]}
             />

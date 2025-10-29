@@ -10,11 +10,10 @@
 
 .analytics-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 10px;
-  flex-grow: 1;
-  min-height: 0;
 }
+
 
 .blurred {
   filter: blur(5px);
