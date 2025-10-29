@@ -153,12 +153,6 @@ export default function Analytics() {
       <div className={getBlurClass("chef")}>
         <ChefPerformance chefPerformance={chefPerformance} />
       </div>
-
-      {loading && (
-        <p style={{ textAlign: "center", fontSize: "12px" }}>
-          Loading data...
-        </p>
-      )}
     </div>
   );
 }
