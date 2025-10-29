@@ -42,24 +42,22 @@ export default function Checkout() {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
-  // Update quantity
-  const updateQty = (id, delta) => {
+  // Update quantity (unique per item name + id)
+  const updateQty = (_id, name, delta) => {
     setCart((prev) => {
-      const p = prev.find((x) => x.id === id);
-      if (!p && delta > 0)
-        return [...prev, { id, name: "Item", price: 0, qty: delta }];
-
       const updated = prev
         .map((x) =>
-          x.id === id ? { ...x, qty: Math.max(0, x.qty + delta) } : x
+          x._id === _id && x.name === name
+            ? { ...x, qty: Math.max(0, x.qty + delta) }
+            : x
         )
         .filter((x) => x.qty > 0);
 
       if (updated.length === 0) navigate("/");
-
       return updated;
     });
   };
+
 
   // Calculate totals
   const computeTotals = () => {
@@ -189,9 +187,10 @@ export default function Checkout() {
               <div className="ci-price">₹{it.price}</div>
             </div>
             <div className="ci-controls">
-              <button onClick={() => updateQty(it.id, -1)}>-</button>
+              <button onClick={() => updateQty(it._id, it.name, -1)}>-</button>
               <span>{it.qty}</span>
-              <button onClick={() => updateQty(it.id, +1)}>+</button>
+              <button onClick={() => updateQty(it._id, it.name, +1)}>+</button>
+
             </div>
           </div>
         ))}

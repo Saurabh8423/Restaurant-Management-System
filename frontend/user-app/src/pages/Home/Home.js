@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from "react";
-// import api from "../../api/axios";
 import CategoryTabs from "../../components/CategoryTabs/CategoryTabs";
 import SearchBar from "../../components/SearchBar/SearchBar";
 import FoodCard from "../../components/FoodCard/FoodCard";
@@ -28,7 +27,6 @@ export default function Home() {
   const perPage = 8;
   const listRef = useRef();
 
-  // Match category (handles case, spacing, plural forms)
   const matchCategory = (catFromDB, selectedCat) => {
     if (!catFromDB || !selectedCat) return false;
     const c1 = catFromDB.toLowerCase().replace(/\s+/g, "");
@@ -42,7 +40,6 @@ export default function Home() {
     );
   };
 
-  //  Fetch menu items from backend
   useEffect(() => {
     const fetchMenu = async () => {
       try {
@@ -59,7 +56,6 @@ export default function Home() {
               : "/default-food.png",
           }));
 
-          //  Set items & visibleItems correctly
           setItems(menuItems);
           setVisibleItems(
             menuItems
@@ -90,7 +86,19 @@ export default function Home() {
     fetchMenu();
   }, [selected]);
 
-  //  Search + Category filter
+  useEffect(() => {
+    if (!search) return;
+    const foundCategory = CATEGORIES.find(
+      (cat) =>
+        cat.toLowerCase().replace(/\s+/g, "") ===
+          search.toLowerCase().replace(/\s+/g, "") ||
+        cat.toLowerCase().includes(search.toLowerCase())
+    );
+    if (foundCategory && foundCategory !== selected) {
+      setSelected(foundCategory);
+    }
+  }, [search]);
+
   useEffect(() => {
     const filtered = items.filter(
       (i) =>
@@ -100,19 +108,20 @@ export default function Home() {
     setVisibleItems(filtered.slice(0, perPage));
   }, [selected, items, search]);
 
-  //  Persist cart
   useEffect(() => {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
-  //  Add / Remove items from cart
+  // 🧠 FIXED: Add or remove unique product (by both _id and name)
   const onAdd = (item, delta) => {
     setCart((prev) => {
-      const exists = prev.find((p) => p._id === item._id);
+      const exists = prev.find(
+        (p) => p._id === item._id && p.name === item.name
+      );
       if (exists) {
         const updated = prev
           .map((p) =>
-            p._id === item._id
+            p._id === item._id && p.name === item.name
               ? { ...p, qty: Math.max(0, p.qty + delta) }
               : p
           )
@@ -134,9 +143,10 @@ export default function Home() {
     });
   };
 
-  const qtyOf = (id) => cart.find((c) => c._id === id)?.qty || 0;
+  // 🧠 FIXED: Count per unique item
+  const qtyOf = (id, name) =>
+    cart.find((c) => c._id === id && c.name === name)?.qty || 0;
 
-  //  Infinite scroll
   const loadMore = () => {
     const filtered = items.filter(
       (i) =>
@@ -185,23 +195,31 @@ export default function Home() {
           </div>
         </div>
 
-        <CategoryTabs
-          categories={categories}
-          selected={selected}
-          onSelect={setSelected}
-        />
+        {(!search || !CATEGORIES.some((cat) =>
+          cat.toLowerCase().includes(search.toLowerCase())
+        )) && (
+          <CategoryTabs
+            categories={categories}
+            selected={selected}
+            onSelect={setSelected}
+          />
+        )}
 
         <div className="category-title">{selected}</div>
 
         <div className="items-grid" onScroll={onScroll} ref={listRef}>
-          {visibleItems.map((it) => (
-            <FoodCard
-              key={it._id}
-              item={it}
-              qty={qtyOf(it._id)}
-              onChangeQty={onAdd}
-            />
-          ))}
+          {visibleItems.length > 0 ? (
+            visibleItems.map((it) => (
+              <FoodCard
+                key={`${it._id}-${it.name}`}
+                item={it}
+                qty={qtyOf(it._id, it.name)}
+                onChangeQty={onAdd}
+              />
+            ))
+          ) : (
+            <div className="no-results">No items found.</div>
+          )}
         </div>
 
         <div className="next-fixed">
@@ -211,11 +229,9 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Modal appears over blurred background */}
       {showDetails && (
         <DetailsModal visible={showDetails} onSave={handleDetailsSave} />
       )}
     </>
   );
-
 }
