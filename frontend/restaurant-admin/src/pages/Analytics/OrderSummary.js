@@ -85,9 +85,9 @@ export default function OrderSummary({ served, dineIn, takeAway, filter, setFilt
 
           {/* Progress Metrics */}
           <div className="metrics-list">
-            <OrderMetric name="Take Away" value={takeAway} total={totalOrders} color="#2563eb" />
-            <OrderMetric name="Served" value={served} total={totalOrders} color="#10b981" />
-            <OrderMetric name="Dine In" value={dineIn} total={totalOrders} color="#f59e0b" />
+            <OrderMetric name="Take Away" value={takeAway} total={totalOrders} color="#5B5B5B" />
+            <OrderMetric name="Served" value={served} total={totalOrders} color="#828282" />
+            <OrderMetric name="Dine In" value={dineIn} total={totalOrders} color="#2C2C2C" />
           </div>
         </div>
       </div>

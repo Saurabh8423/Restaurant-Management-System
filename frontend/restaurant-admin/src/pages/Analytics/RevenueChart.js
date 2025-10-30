@@ -1,11 +1,12 @@
 import React, { useMemo } from "react";
 import {
-  BarChart,
   Bar,
+  Line,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
+  ComposedChart,
   CartesianGrid,
 } from "recharts";
 import { FaAngleDown } from "react-icons/fa6";
@@ -28,10 +29,12 @@ export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter
   // === Convert API date data → day-wise data (Mon–Sun)
   const dayWiseData = useMemo(() => {
     const dayMap = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const result = Array(7).fill(null).map((_, i) => ({
-      day: dayMap[i],
-      revenue: 0,
-    }));
+    const result = Array(7)
+      .fill(null)
+      .map((_, i) => ({
+        day: dayMap[i],
+        revenue: 0,
+      }));
 
     if (Array.isArray(lineData)) {
       lineData.forEach((item) => {
@@ -53,7 +56,10 @@ export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter
 
       <div className="revenue-chart-container">
         <ResponsiveContainer width="100%" height={220}>
-          <BarChart data={dayWiseData} margin={{ top: 10, right: 20, left: -10, bottom: 0 }}>
+          <ComposedChart
+            data={dayWiseData}
+            margin={{ top: 10, right: 20, left: -10, bottom: 0 }}
+          >
             <CartesianGrid strokeDasharray="3 3" vertical={false} />
             <XAxis dataKey="day" axisLine={false} tickLine={false} />
             <YAxis hide />
@@ -63,15 +69,20 @@ export default function RevenueChart({ lineData, revenueFilter, setRevenueFilter
                 border: "1px solid #e5e7eb",
                 borderRadius: "6px",
               }}
-              labelStyle={{ color: "#374151" }}
+              labelStyle={{ color: "#83878cff" }}
             />
-            <Bar
+            {/* Background Bar */}
+            <Bar dataKey="revenue" fill="#E5E7EB" barSize={30} radius={[6, 6, 0, 0]} />
+            {/* Smooth Line Overlay */}
+            <Line
+              type="monotone"
               dataKey="revenue"
-              fill="#5a5d64ff"
-              barSize={30}
-              radius={[6, 6, 0, 0]}
+              stroke="#000000"
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 4 }}
             />
-          </BarChart>
+          </ComposedChart>
         </ResponsiveContainer>
       </div>
     </ChartCard>

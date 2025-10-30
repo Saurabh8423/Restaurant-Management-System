@@ -23,96 +23,103 @@ export default function Analytics() {
   });
   const [chefPerformance, setChefPerformance] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
-  const [filter, setFilter] = useState("Daily");
+
+  const [orderFilter, setOrderFilter] = useState("Daily");
+  const [revenueFilter, setRevenueFilter] = useState("Daily");
   const [loading, setLoading] = useState(false);
 
   const chefs = ["Mohan", "Pritam", "Yash", "Rahul"];
 
-  const generateChefPerformance = useCallback((totalOrders = 20) => {
+  // Generate simulated chef performance (runs once)
+  useEffect(() => {
     const performance = chefs.map((chef) => ({
       name: chef,
-      totalOrders: 0,
+      totalOrders: Math.floor(Math.random() * 25) + 5,
       served: 0,
       pending: 0,
     }));
-
-    for (let i = 0; i < totalOrders; i++) {
-      const randomChef =
-        performance[Math.floor(Math.random() * performance.length)];
-      randomChef.totalOrders += 1;
-    }
 
     performance.forEach((chef) => {
       chef.served = Math.floor(Math.random() * chef.totalOrders);
       chef.pending = chef.totalOrders - chef.served;
     });
 
-    return performance;
-  }, [chefs]);
+    setChefPerformance(performance);
+  }, []);
 
-  const fetchAnalyticsData = useCallback(
-    async (selectedFilter) => {
-      try {
-        setLoading(true);
-        const response = await API.get(
-          `/analytics?filter=${selectedFilter.toLowerCase()}`
-        );
-        const data = response.data || {};
+  // === Fetch Orders Summary ===
+  const fetchOrderSummary = async (selectedFilter) => {
+    try {
+      setLoading(true);
+      const response = await API.get(
+        `/analytics/orders?filter=${selectedFilter.toLowerCase()}`
+      );
+      const data = response.data || {};
+      if (data.orders) setOrders(data.orders);
+    } catch (error) {
+      console.error("Error fetching order summary:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        setStats(data.stats || {});
-        setOrders(data.orders || {});
-        setRevenueData(data.revenue || []);
+  // === Fetch Revenue Data ===
+  const fetchRevenueData = async (selectedFilter) => {
+    try {
+      setLoading(true);
+      const response = await API.get(
+        `/analytics/revenue?filter=${selectedFilter.toLowerCase()}`
+      );
+      const data = response.data || {};
+      if (data.stats) setStats(data.stats);
+      if (data.revenue) setRevenueData(data.revenue);
+    } catch (error) {
+      console.error("Error fetching revenue data:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-        const simulatedChefPerformance = generateChefPerformance(25);
-        setChefPerformance(simulatedChefPerformance);
-      } catch (error) {
-        console.error("Error fetching analytics data:", error);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [generateChefPerformance]
-  );
-
+  // Fetch order summary only when orderFilter changes
   useEffect(() => {
-    fetchAnalyticsData(filter);
-  }, [filter, fetchAnalyticsData]);
+    fetchOrderSummary(orderFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [orderFilter]);
+
+  // Fetch revenue data only when revenueFilter changes
+  useEffect(() => {
+    fetchRevenueData(revenueFilter);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revenueFilter]);
 
   // ===== Improved Blur Logic =====
   const getBlurClass = (section) => {
-    if (!searchTerm) return ""; // nothing blurred if input is empty
+    if (!searchTerm) return "";
     const term = searchTerm.toLowerCase().trim();
 
-    // Chef section never blurs
     if (section === "chef") return "";
 
-    // === Total Stats ===
     if (
       term.includes("total") ||
-      term.includes("total revenue") ||
-      term.includes("total orders") ||
-      term.includes("total clients") ||
-      term.includes("total chef")
+      term.includes("revenue") ||
+      term.includes("orders") ||
+      term.includes("clients")
     ) {
       return section === "stats" ? "" : "blurred";
     }
 
-    // === Order Summary ===
     if (term.includes("order") || term.includes("summary")) {
       return section === "orderSummary" ? "" : "blurred";
     }
 
-    // === Revenue Chart ===
     if (term.includes("revenue")) {
       return section === "revenueChart" ? "" : "blurred";
     }
 
-    // === Tables Overview ===
-    if (term.includes("table") || term.includes("tables")) {
+    if (term.includes("table")) {
       return section === "tablesOverview" ? "" : "blurred";
     }
 
-    // Default: blur everything else
     return "blurred";
   };
 
@@ -120,7 +127,6 @@ export default function Analytics() {
     <div className="analytics-page">
       <h3>Analytics</h3>
 
-      {/* ==== Stats Row ==== */}
       <div className={getBlurClass("stats")}>
         <StatsRow stats={stats} />
       </div>
@@ -131,16 +137,16 @@ export default function Analytics() {
             served={orders?.served || 0}
             dineIn={orders?.dineIn || 0}
             takeAway={orders?.takeAway || 0}
-            filter={filter}
-            setFilter={setFilter}
+            filter={orderFilter}
+            setFilter={setOrderFilter}
           />
         </div>
 
         <div className={getBlurClass("revenueChart")}>
           <RevenueChart
             lineData={revenueData}
-            revenueFilter={filter}
-            setRevenueFilter={setFilter}
+            revenueFilter={revenueFilter}
+            setRevenueFilter={setRevenueFilter}
           />
         </div>
 
@@ -149,7 +155,6 @@ export default function Analytics() {
         </div>
       </div>
 
-      {/* Chef section never blurs */}
       <div className={getBlurClass("chef")}>
         <ChefPerformance chefPerformance={chefPerformance} />
       </div>
