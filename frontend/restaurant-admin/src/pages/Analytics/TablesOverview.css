@@ -7,16 +7,18 @@
 .tables-legend {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 15px;
   font-size: 11px;
-  margin: 5px 5px 10px 5px;
-  color: #6b7280;
+  margin: 5px 5px 20px 5px;
+  color: #000000;
 }
 
 .legend-item {
   display: flex;
   align-items: center;
   gap: 4px;
+  margin-bottom: 15px;
 }
 
 .legend-color {
@@ -27,7 +29,7 @@
 
 /* Status Colors */
 .reserved-color {
-  background: #3DC35F; /* bright green reserved */
+  background: #3DC35F; 
 }
 
 .available-color {
@@ -48,8 +50,8 @@
   border-radius: 4px;
   line-height: 1.2;
   padding: 4px 2px;
-  height: 35px;
-  width: 45px;
+  height: 39px;
+  width: 46px;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -30,7 +30,7 @@ export default function TablesOverview() {
   };
 
   return (
-    <ChartCard title="Tables Overview" className="tables-overview-card">
+    <ChartCard title="Tables" className="tables-overview-card">
       <div className="tables-legend">
         <span className="legend-item">
           <span className="legend-color reserved-color"></span>Reserved

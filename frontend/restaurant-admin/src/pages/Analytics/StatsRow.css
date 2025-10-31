@@ -56,3 +56,10 @@
   text-transform: uppercase;
   margin-top: 2px;
 }
+
+.blurred {
+  filter: blur(4px);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}

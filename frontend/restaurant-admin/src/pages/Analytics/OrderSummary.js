@@ -40,9 +40,9 @@ export default function OrderSummary({ served, dineIn, takeAway, filter, setFilt
 
   const pieData = useMemo(
     () => [
-      { name: "Dine In", value: dineIn, color: "#f59e0b" },
-      { name: "Take Away", value: takeAway, color: "#2563eb" },
-      { name: "Served", value: served, color: "#10b981" },
+      { name: "Dine In", value: dineIn, color: "#5B5B5B" },
+      { name: "Take Away", value: takeAway, color: "#828282" },
+      { name: "Served", value: served, color: "#2C2C2C" },
     ],
     [served, dineIn, takeAway]
   );

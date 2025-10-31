@@ -26,9 +26,9 @@ export default function Analytics() {
   const [filter, setFilter] = useState("Daily");
   const [loading, setLoading] = useState(false);
 
-  const chefs = ["Mohan", "Pritam", "Yash", "Rahul"];
 
   const generateChefPerformance = useCallback((totalOrders = 20) => {
+    const chefs = ["Mohan", "Pritam", "Yash", "Rahul"];
     const performance = chefs.map((chef) => ({
       name: chef,
       totalOrders: 0,
@@ -48,31 +48,37 @@ export default function Analytics() {
     });
 
     return performance;
-  }, [chefs]);
+  }, []);
 
   const fetchAnalyticsData = useCallback(
     async (selectedFilter) => {
       try {
         setLoading(true);
-        const response = await API.get(
-          `/analytics?filter=${selectedFilter.toLowerCase()}`
-        );
+        const response = await API.get(`/analytics?filter=${selectedFilter.toLowerCase()}`);
         const data = response.data || {};
 
         setStats(data.stats || {});
         setOrders(data.orders || {});
         setRevenueData(data.revenue || []);
 
-        const simulatedChefPerformance = generateChefPerformance(25);
-        setChefPerformance(simulatedChefPerformance);
+        //  Fetch chef data dynamically
+        const chefRes = await API.get("/chefs");
+        if (chefRes?.data?.success) {
+          const chefData = chefRes.data.chefs.map((c) => ({
+            name: c.name,
+            totalOrders: c.ordersHandled || 0,
+          }));
+          setChefPerformance(chefData);
+        }
       } catch (error) {
         console.error("Error fetching analytics data:", error);
       } finally {
         setLoading(false);
       }
     },
-    [generateChefPerformance]
+    []
   );
+
 
   useEffect(() => {
     fetchAnalyticsData(filter);
