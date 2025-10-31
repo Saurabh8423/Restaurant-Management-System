@@ -42,6 +42,11 @@ export default function Checkout() {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
+  useEffect(() => {
+    document.body.style.overflow = cookVisible ? "hidden" : "auto";
+  }, [cookVisible]);
+
+
   // Update quantity (unique per item name + id)
   const updateQty = (_id, name, delta) => {
     setCart((prev) => {
@@ -155,83 +160,85 @@ export default function Checkout() {
 
   return (
     <div className="checkout-shell">
-      {/* Header greeting */}
-      <header className="home-header">
-        <div className="greet">
-          <div className="greet-large">Good {greeting}</div>
-          <div className="greet-small">Place your order here</div>
-        </div>
-      </header>
-
-      {/* Search bar */}
-      <SearchBar value={search} onChange={setSearch} />
-
-      {/* Cart items */}
-      <div className="cart-items">
-        {cart.map((it) => (
-          <div className="cart-item" key={it.id}>
-            <div className="cart-img">
-              <img
-                src={
-                  it.image
-                    ? it.image.startsWith("http")
-                      ? it.image
-                      : `https://restaurant-management-system-backend-8ku8.onrender.com/${it.image}`
-                    : "/placeholder.png"
-                }
-                alt={it.name}
-              />
-            </div>
-            <div className="cart-info">
-              <div className="ci-name">{it.name}</div>
-              <div className="ci-price">₹{it.price}</div>
-            </div>
-            <div className="ci-controls">
-              <button onClick={() => updateQty(it._id, it.name, -1)}>-</button>
-              <span>{it.qty}</span>
-              <button onClick={() => updateQty(it._id, it.name, +1)}>+</button>
-
-            </div>
+      {/* Apply blur when cooking modal is open */}
+      <div className={`checkout-content ${cookVisible ? "blurred" : ""}`}>
+        {/* Header greeting */}
+        <header className="home-header">
+          <div className="greet">
+            <div className="greet-large">Good {greeting}</div>
+            <div className="greet-small">Place your order here</div>
           </div>
-        ))}
-      </div>
+        </header>
 
-      {/* Add cooking instructions */}
-      <div style={{ marginTop: 10 }}>
-        <button className="add-instruction" onClick={() => setCookVisible(true)}>
-          Add cooking instructions (optional)
-        </button>
-      </div>
+        {/* Search bar */}
+        <SearchBar value={search} onChange={setSearch} />
 
-      {instructions && (
-        <div className="cook-summary">
-          <strong>Cooking Instructions:</strong> {instructions}
+        {/* Cart items */}
+        <div className="cart-items">
+          {cart.map((it) => (
+            <div className="cart-item" key={it.id}>
+              <div className="cart-img">
+                <img
+                  src={
+                    it.image
+                      ? it.image.startsWith("http")
+                        ? it.image
+                        : `https://restaurant-management-system-backend-8ku8.onrender.com/${it.image}`
+                      : "/placeholder.png"
+                  }
+                  alt={it.name}
+                />
+              </div>
+              <div className="cart-info">
+                <div className="ci-name">{it.name}</div>
+                <div className="ci-price">₹{it.price}</div>
+              </div>
+              <div className="ci-controls">
+                <button onClick={() => updateQty(it._id, it.name, -1)}>-</button>
+                <span>{it.qty}</span>
+                <button onClick={() => updateQty(it._id, it.name, +1)}>+</button>
+              </div>
+            </div>
+          ))}
         </div>
-      )}
 
-      {/* Dine In / Take Away toggle */}
-      <div className={`order-type ${orderType === "Take Away" ? "swap" : ""}`}>
-        <button
-          className={orderType === "Dine In" ? "active" : ""}
-          onClick={() => setOrderType("Dine In")}
-        >
-          Dine In
-        </button>
-        <button
-          className={orderType === "Take Away" ? "active" : ""}
-          onClick={() => setOrderType("Take Away")}
-        >
-          Take Away
-        </button>
+        {/* Add cooking instructions */}
+        <div style={{ marginTop: 10 }}>
+          <button className="add-instruction" onClick={() => setCookVisible(true)}>
+            Add cooking instructions (optional)
+          </button>
+        </div>
+
+        {instructions && (
+          <div className="cook-summary">
+            <strong>Cooking Instructions:</strong> {instructions}
+          </div>
+        )}
+
+        {/* Dine In / Take Away toggle */}
+        <div className={`order-type ${orderType === "Take Away" ? "swap" : ""}`}>
+          <button
+            className={orderType === "Dine In" ? "active" : ""}
+            onClick={() => setOrderType("Dine In")}
+          >
+            Dine In
+          </button>
+          <button
+            className={orderType === "Take Away" ? "active" : ""}
+            onClick={() => setOrderType("Take Away")}
+          >
+            Take Away
+          </button>
+        </div>
+
+        {/* Cart summary */}
+        <CartSummary
+          cart={cart}
+          user={user}
+          orderType={orderType}
+          onPlaceOrder={handlePlaceOrder}
+        />
       </div>
-
-      {/* Swipe-to-order summary */}
-      <CartSummary
-        cart={cart}
-        user={user}
-        orderType={orderType}
-        onPlaceOrder={handlePlaceOrder}
-      />
 
       {/* Cooking instruction modal */}
       <CookInstructionsModal
@@ -241,4 +248,5 @@ export default function Checkout() {
       />
     </div>
   );
+
 }

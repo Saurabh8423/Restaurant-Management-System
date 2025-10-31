@@ -91,7 +91,7 @@ export default function Home() {
     const foundCategory = CATEGORIES.find(
       (cat) =>
         cat.toLowerCase().replace(/\s+/g, "") ===
-          search.toLowerCase().replace(/\s+/g, "") ||
+        search.toLowerCase().replace(/\s+/g, "") ||
         cat.toLowerCase().includes(search.toLowerCase())
     );
     if (foundCategory && foundCategory !== selected) {
@@ -112,7 +112,7 @@ export default function Home() {
     localStorage.setItem("rms_cart", JSON.stringify(cart));
   }, [cart]);
 
-  // 🧠 FIXED: Add or remove unique product (by both _id and name)
+  //  FIXED: Add or remove unique product (by both _id and name)
   const onAdd = (item, delta) => {
     setCart((prev) => {
       const exists = prev.find(
@@ -143,7 +143,7 @@ export default function Home() {
     });
   };
 
-  // 🧠 FIXED: Count per unique item
+  //  FIXED: Count per unique item
   const qtyOf = (id, name) =>
     cart.find((c) => c._id === id && c.name === name)?.qty || 0;
 
@@ -190,20 +190,25 @@ export default function Home() {
 
         <div className="search-row">
           <SearchBar value={search} onChange={setSearch} />
-          <div className="cart-total">
-            ₹{cart.reduce((s, c) => s + c.qty * c.price, 0)}
-          </div>
+
+          {/* Show price only if cart has at least one item */}
+          {cart.length > 0 && (
+            <div className="cart-total">
+              ₹{cart.reduce((s, c) => s + c.qty * c.price, 0)}
+            </div>
+          )}
         </div>
+
 
         {(!search || !CATEGORIES.some((cat) =>
           cat.toLowerCase().includes(search.toLowerCase())
         )) && (
-          <CategoryTabs
-            categories={categories}
-            selected={selected}
-            onSelect={setSelected}
-          />
-        )}
+            <CategoryTabs
+              categories={categories}
+              selected={selected}
+              onSelect={setSelected}
+            />
+          )}
 
         <div className="category-title">{selected}</div>
 

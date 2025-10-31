@@ -198,3 +198,13 @@
     width: 100%;
   }
 }
+
+
+/* ---------- BLUR EFFECT WHEN MODAL OPEN ---------- */
+.checkout-content.blurred {
+  filter: blur(2px);
+  opacity: 0.7;
+  pointer-events: none;
+  user-select: none;
+  transition: all 0.3s ease;
+}
