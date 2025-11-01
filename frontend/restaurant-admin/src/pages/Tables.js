@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { FaTrashAlt, FaChair, FaPlus } from "react-icons/fa";
 import API from "../api/axios";
 import "./Tables.css";
@@ -7,6 +7,8 @@ export default function Tables() {
   const [tables, setTables] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
+
+    const modalRef = useRef(null); 
 
   useEffect(() => {
     fetchTables();
@@ -87,59 +89,68 @@ export default function Tables() {
         </div>
       </div>
 
-      {/* Modal for Creating Table */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h3>Create New Table</h3>
-            <CreateTable
-              onCreate={(size, name) => addTable({ size, tableName: name })}
-              onCancel={() => setShowModal(false)}
-              loading={loading}
-            />
-          </div>
+        <div className="floating-modal" ref={modalRef}>
+          <CreateTable
+            onCreate={(size, name) => addTable({ size, tableName: name })}
+            onCancel={() => setShowModal(false)}
+            loading={loading}
+            nextNumber={tables.length + 1}
+          />
         </div>
       )}
     </div>
   );
 }
 
-function CreateTable({ onCreate, onCancel, loading }) {
+function CreateTable({ onCreate, onCancel, loading, nextNumber }) {
   const [name, setName] = useState("");
   const [size, setSize] = useState(2);
 
   return (
-    <div className="modal-form">
+    <div className="new-table-card">
+      {/* Close button */}
+      <button className="close-btn" onClick={onCancel}>✕</button>
+
+      {/* Input for table name */}
+      <label className="label">Table name (optional)</label>
       <input
-        placeholder="Table name (optional)"
+        type="text"
+        className="input-field"
+        placeholder="Enter table name..."
         value={name}
         onChange={(e) => setName(e.target.value)}
-        className="input-field"
       />
 
+      {/* Table number auto-display */}
+      <h2 className="table-number-design">
+        {nextNumber.toString().padStart(2, "0")}
+      </h2>
+
+      {/* Chair dropdown */}
+      <label className="label">Chairs</label>
       <select
         value={size}
         onChange={(e) => setSize(Number(e.target.value))}
         className="select-field"
       >
-        <option value={2}>2</option>
-        <option value={4}>4</option>
-        <option value={6}>6</option>
-        <option value={8}>8</option>
+        <option value={2}>02</option>
+        <option value={4}>04</option>
+        <option value={6}>06</option>
+        <option value={8}>08</option>
       </select>
 
-      <div className="modal-actions">
-        <button
-          className="btn-create"
-          onClick={() => onCreate(size, name)}
-          disabled={loading}
-        >
-          {loading ? "Creating..." : "Create"}
-        </button>
-        <button className="btn-cancel" onClick={onCancel}>
-          Cancel
-        </button>
-      </div>
+      {/* Create button */}
+      <button
+        className="btn-create-table"
+        onClick={() => onCreate(size, name)}
+        disabled={loading}
+      >
+        {loading ? "Creating..." : "Create"}
+      </button>
     </div>
   );
 }
+
+
+
