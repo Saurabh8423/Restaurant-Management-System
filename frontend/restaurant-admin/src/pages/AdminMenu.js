@@ -13,11 +13,9 @@ export default function AdminMenu() {
     try {
       setLoading(true);
       const res = await API.get("/menu");
-      // assume API returns array; fallback safe-check
       setProducts(Array.isArray(res.data) ? res.data : res.data?.menu || []);
     } catch (err) {
       console.error("Error fetching products:", err);
-      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -27,35 +25,50 @@ export default function AdminMenu() {
     fetchProducts();
   }, []);
 
+  // Disable scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  }, [showModal]);
+
   const handleProductAdded = () => {
-    // close modal and refresh product list
     setShowModal(false);
     fetchProducts();
   };
 
   return (
-    <div className={`menu-page ${showModal ? "blur-bg" : ""}`}>
-      <div className="menu-header">
-        <h2>Products</h2>
-        <button className="add-btn" onClick={() => setShowModal(true)}>
-          + Add Product
-        </button>
+    <div className="menu-container">
+      {/* Main Product Area */}
+      <div className={`menu-page ${showModal ? "blur-bg" : ""}`}>
+        <div className="menu-header">
+          <h2>Product Menu</h2>
+          <button className="add-btn" onClick={() => setShowModal(true)}>
+            Add Product
+          </button>
+        </div>
+
+        {loading ? (
+          <p className="loading">Loading...</p>
+        ) : products.length === 0 ? (
+          <p className="empty">No products available</p>
+        ) : (
+          <div className="product-grid">
+            {products.map((item) => (
+              <ProductCard key={item._id || item.id} item={item} />
+            ))}
+          </div>
+        )}
       </div>
 
-      {loading ? (
-        <p className="loading">Loading products...</p>
-      ) : products.length === 0 ? (
-        <p className="empty">No products found.</p>
-      ) : (
-        <div className="product-grid">
-          {products.map((item) => (
-            <ProductCard key={item._id || item.id} item={item} />
-          ))}
-        </div>
-      )}
-
+      {/* Only Add Product Modal */}
       {showModal && (
-        <AddProduct onClose={() => setShowModal(false)} onProductAdded={handleProductAdded} />
+        <AddProduct
+          onClose={() => setShowModal(false)}
+          onProductAdded={handleProductAdded}
+        />
       )}
     </div>
   );

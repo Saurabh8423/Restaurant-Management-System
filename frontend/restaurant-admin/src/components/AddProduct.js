@@ -88,9 +88,10 @@ export default function AddProduct({ onClose, onProductAdded }) {
 
   return (
     <>
-      <div className="modal-overlay" onMouseDown={onClose} />
-      <div className="modal-wrapper" role="dialog" aria-modal="true">
-        <div className="modal-content" onMouseDown={(e) => e.stopPropagation()}>
+      <div className="modal-overlay" onClick={onClose}></div>
+      <div className="modal-wrapper">
+        <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+
           <h3>Add Product</h3>
           <form className="add-product-form" onSubmit={submit}>
             <div className="image-upload">

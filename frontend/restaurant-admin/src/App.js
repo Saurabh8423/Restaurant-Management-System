@@ -23,7 +23,7 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/tables" element={<Tables />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/admin/menu" element={<AdminMenu />} />
+            <Route path="/admin-menu" element={<AdminMenu />} />
             <Route path="*" element={<div>404 Not Found</div>} />
           </Routes>
         </main>
