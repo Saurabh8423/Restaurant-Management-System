@@ -1,9 +1,10 @@
 .product-card {
-    background: #fff;
+    background: #D9D9D9;
     border-radius: 16px;
     box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
     padding: 18px;
-    width: 320px;
+    width: 332px;
+    height: 387px;
     display: flex;
     flex-direction: column;
     gap: 14px;
@@ -16,9 +17,9 @@
 }
 
 .product-image {
-    height: 180px;
-    width: 100%;
-    background: #f0f0f0;
+    height: 145px;
+    width: 299px;
+    background: #ffffff;
     border-radius: 14px;
     overflow: hidden;
     display: flex;
@@ -37,7 +38,7 @@
 .product-details {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 10px;
     padding: 0 6px;
 }
 

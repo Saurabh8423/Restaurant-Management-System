@@ -7,8 +7,8 @@ export default function Tables() {
   const [tables, setTables] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
-
-    const modalRef = useRef(null); 
+  const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 });
+  const addButtonRef = useRef(null);
 
   useEffect(() => {
     fetchTables();
@@ -53,6 +53,16 @@ export default function Tables() {
     }
   };
 
+  // Show modal near + button
+  const handleAddClick = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setModalPosition({
+      top: rect.top + window.scrollY,
+      left: rect.right + 10,
+    });
+    setShowModal(true);
+  };
+
   return (
     <div className="tables-page">
       <h2>Tables</h2>
@@ -68,7 +78,6 @@ export default function Tables() {
               <FaTrashAlt />
             </button>
 
-            {/* Updated order: Name first, number second */}
             <div className="table-name">{t.tableName || "Table"}</div>
             <div className="table-number">
               {String(t.tableNumber).padStart(2, "0")}
@@ -84,13 +93,24 @@ export default function Tables() {
         ))}
 
         {/* Add Table Button */}
-        <div className="add-table-card" onClick={() => setShowModal(true)}>
+        <div
+          ref={addButtonRef}
+          className="add-table-card"
+          onClick={handleAddClick}
+        >
           <FaPlus className="plus-icon" />
         </div>
       </div>
 
+      {/* Floating Modal */}
       {showModal && (
-        <div className="floating-modal" ref={modalRef}>
+        <div
+          className="floating-modal beside"
+          style={{
+            top: modalPosition.top,
+            left: modalPosition.left,
+          }}
+        >
           <CreateTable
             onCreate={(size, name) => addTable({ size, tableName: name })}
             onCancel={() => setShowModal(false)}
@@ -109,10 +129,8 @@ function CreateTable({ onCreate, onCancel, loading, nextNumber }) {
 
   return (
     <div className="new-table-card">
-      {/* Close button */}
       <button className="close-btn" onClick={onCancel}>✕</button>
 
-      {/* Input for table name */}
       <label className="label">Table name (optional)</label>
       <input
         type="text"
@@ -122,12 +140,10 @@ function CreateTable({ onCreate, onCancel, loading, nextNumber }) {
         onChange={(e) => setName(e.target.value)}
       />
 
-      {/* Table number auto-display */}
       <h2 className="table-number-design">
         {nextNumber.toString().padStart(2, "0")}
       </h2>
 
-      {/* Chair dropdown */}
       <label className="label">Chairs</label>
       <select
         value={size}
@@ -140,7 +156,6 @@ function CreateTable({ onCreate, onCancel, loading, nextNumber }) {
         <option value={8}>08</option>
       </select>
 
-      {/* Create button */}
       <button
         className="btn-create-table"
         onClick={() => onCreate(size, name)}
@@ -151,6 +166,3 @@ function CreateTable({ onCreate, onCancel, loading, nextNumber }) {
     </div>
   );
 }
-
-
-
