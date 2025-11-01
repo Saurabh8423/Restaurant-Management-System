@@ -34,13 +34,14 @@ export default function Sidebar() {
           <FaListAlt className="nav-icon" title="Orders" />
         </NavLink>
 
+        {/* Updated: Opens AdminMenu instead of AddProduct */}
         <NavLink
-          to="/add-product"
+          to="/admin-menu"
           className={({ isActive }) =>
             isActive ? "nav-item active" : "nav-item"
           }
         >
-          <FaPlus className="nav-icon" title="Add Product" />
+          <FaPlus className="nav-icon" title="Manage Menu / Add Product" />
         </NavLink>
       </nav>
     </aside>

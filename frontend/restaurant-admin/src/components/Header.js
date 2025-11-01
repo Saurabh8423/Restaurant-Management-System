@@ -2,22 +2,33 @@ import React from "react";
 import "./Header.css";
 import logo from "../Assets/Restaurant-Logo.png";
 import { useSearch } from "../context/SearchContext";
+import { useLocation } from "react-router-dom";
 
 export default function Header() {
   const { searchTerm, setSearchTerm } = useSearch();
+  const location = useLocation();
+
+  // Show search bar only on Analytics & Add Product pages
+  const showSearch =
+    location.pathname === "/analytics" ||
+    location.pathname === "/add-product" ||
+    location.pathname === "/" ||
+    location.pathname === "/dashboard";
 
   return (
     <header className="header-bar">
       <div className="header-left">
         <img src={logo} alt="Restaurant Logo" className="header-logo" />
-        <div className="search-wrap">
-          <input
-            className="search-input"
-            placeholder="Filter..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
+        {showSearch && (
+          <div className="search-wrap">
+            <input
+              className="search-input"
+              placeholder="Filter..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+        )}
       </div>
     </header>
   );

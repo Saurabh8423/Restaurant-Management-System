@@ -5,7 +5,7 @@ import Header from "./components/Header";
 import Analytics from "./pages/Analytics/Analytics";
 import Tables from "./pages/Tables";
 import Orders from "./pages/Orders";
-import AddProduct from "./pages/AddProduct";
+import AdminMenu from "./pages/AdminMenu";
 import "./App.css";
 
 function App() {
@@ -23,7 +23,7 @@ function App() {
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/tables" element={<Tables />} />
             <Route path="/orders" element={<Orders />} />
-            <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/admin/menu" element={<AdminMenu />} />
             <Route path="*" element={<div>404 Not Found</div>} />
           </Routes>
         </main>
