@@ -43,6 +43,14 @@ export default function Sidebar() {
         >
           <FaPlus className="nav-icon" title="Manage Menu / Add Product" />
         </NavLink>
+
+        <NavLink
+          to="#"
+          onClick={(e) => e.preventDefault()} 
+          className={({ isActive }) =>
+            isActive ? "nav-item active logout-link" : "nav-item logout-link"
+          }
+        ></NavLink>
       </nav>
     </aside>
   );

@@ -37,6 +37,8 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+
+
 .nav-item:hover {
   background-color: #eaf7f1;
   color: #16a34a;
@@ -54,10 +56,23 @@
   font-size: 20px;
 }
 
+.nav-item.logout-link {
+  position: absolute;
+  bottom: 25px;
+  background-color: #F0F5F3 !important;
+  color: #fff !important;
+}
+
+.nav-item.logout-link:hover {
+  background-color: #F0F5F3 !important;
+  transform: translateY(-2px);
+}
+
 @media (max-height: 700px) {
   .sidebar-nav {
     gap: 16px;
   }
+
   .nav-item {
     width: 44px;
     height: 44px;
