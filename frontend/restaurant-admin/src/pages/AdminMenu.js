@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import API from "../api/axios";
 import AddProduct from "../components/AddProduct";
 import ProductCard from "../components/ProductCard";
 import "./AdminMenu.css";
+import { useSearch } from "../context/SearchContext";
 
 export default function AdminMenu() {
+  const { searchTerm } = useSearch();
   const [products, setProducts] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,14 +27,14 @@ export default function AdminMenu() {
     fetchProducts();
   }, []);
 
-  // Disable scroll when modal is open
-  useEffect(() => {
-    if (showModal) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [showModal]);
+  //  Filter products live by search term (name or category)
+  const filteredProducts = useMemo(() => {
+    if (!searchTerm.trim()) return products;
+    return products.filter((item) =>
+      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      item.category.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [searchTerm, products]);
 
   const handleProductAdded = () => {
     setShowModal(false);
@@ -41,7 +43,6 @@ export default function AdminMenu() {
 
   return (
     <div className="menu-container">
-      {/* Main Product Area */}
       <div className={`menu-page ${showModal ? "blur-bg" : ""}`}>
         <div className="menu-header">
           <h2>Product Menu</h2>
@@ -52,23 +53,19 @@ export default function AdminMenu() {
 
         {loading ? (
           <p className="loading">Loading...</p>
-        ) : products.length === 0 ? (
-          <p className="empty">No products available</p>
+        ) : filteredProducts.length === 0 ? (
+          <p className="empty">No products found for "{searchTerm}"</p>
         ) : (
           <div className="product-grid">
-            {products.map((item) => (
+            {filteredProducts.map((item) => (
               <ProductCard key={item._id || item.id} item={item} />
             ))}
           </div>
         )}
       </div>
 
-      {/* Only Add Product Modal */}
       {showModal && (
-        <AddProduct
-          onClose={() => setShowModal(false)}
-          onProductAdded={handleProductAdded}
-        />
+        <AddProduct onClose={() => setShowModal(false)} onProductAdded={handleProductAdded} />
       )}
     </div>
   );

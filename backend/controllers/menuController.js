@@ -37,7 +37,7 @@ export const addMenuItem = async (req, res) => {
 
     res.status(201).json({
       success: true,
-      message: "✅ Menu item added successfully",
+      message: " Menu item added successfully",
       data: newMenu,
     });
   } catch (error) {
