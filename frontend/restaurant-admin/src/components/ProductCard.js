@@ -2,22 +2,18 @@ import React from "react";
 import "./ProductCard.css";
 
 export default function ProductCard({ item }) {
-  const backendURL =
-    process.env.REACT_APP_API_BASE_URL ||
-    "https://restaurant-management-system-backend-8ku8.onrender.com";
+  const BASE_URL = "https://restaurant-management-system-backend-8ku8.onrender.com";
 
-  const imageUrl = item.image
+  const imageSrc = item?.image
     ? item.image.startsWith("http")
       ? item.image
-       : item.image.startsWith("/uploads/")
-      ? `${backendURL}${item.image}`
-      : `${backendURL}/uploads/${item.image}`
-    : "/placeholder.png";
+      : `${BASE_URL}${item.image.startsWith("/") ? item.image : "/" + item.image}`
+    : "/default-food.png";
 
   return (
     <div className="product-card">
       <div className="product-image">
-        <img src={imageUrl} alt={item.name || "Product"} />
+        <img src={imageSrc} alt={item.name || "Food"} onError={(e) => (e.target.src = "/default-food.png")} />
       </div>
 
       <div className="product-details">
