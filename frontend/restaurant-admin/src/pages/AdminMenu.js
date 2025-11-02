@@ -15,7 +15,7 @@ export default function AdminMenu() {
     try {
       setLoading(true);
       const res = await API.get("/menu");
-      setProducts(Array.isArray(res.data) ? res.data : res.data?.menu || []);
+      setProducts(res.data?.menu || []);
     } catch (err) {
       console.error("Error fetching products:", err);
     } finally {
@@ -27,7 +27,6 @@ export default function AdminMenu() {
     fetchProducts();
   }, []);
 
-  //  Filter products live by search term (name or category)
   const filteredProducts = useMemo(() => {
     if (!searchTerm.trim()) return products;
     return products.filter((item) =>
@@ -38,7 +37,7 @@ export default function AdminMenu() {
 
   const handleProductAdded = () => {
     setShowModal(false);
-    fetchProducts();
+    fetchProducts(); // Refresh after adding product
   };
 
   return (
@@ -58,14 +57,17 @@ export default function AdminMenu() {
         ) : (
           <div className="product-grid">
             {filteredProducts.map((item) => (
-              <ProductCard key={item._id || item.id} item={item} />
+              <ProductCard key={item._id} item={item} />
             ))}
           </div>
         )}
       </div>
 
       {showModal && (
-        <AddProduct onClose={() => setShowModal(false)} onProductAdded={handleProductAdded} />
+        <AddProduct
+          onClose={() => setShowModal(false)}
+          onProductAdded={handleProductAdded}
+        />
       )}
     </div>
   );
