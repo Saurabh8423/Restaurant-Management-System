@@ -1,13 +1,13 @@
 .sidebar {
   width: 90px;
   background: #f0f5f3;
-  border-right: 1px solid #e6eee9;
+  /* border-right: 1px solid #e6eee9; */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 0;
   height: 100%;
-  box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05);
+  /* box-shadow: 2px 0 6px rgba(0, 0, 0, 0.05); */
 }
 
 .sidebar-nav {
