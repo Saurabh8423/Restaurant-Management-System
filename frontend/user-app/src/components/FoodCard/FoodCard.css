@@ -1,5 +1,5 @@
 .food-card {
-  background: #fff;
+  background: #D9D9D9;
   border-radius: 12px;
   padding: 8px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
@@ -49,8 +49,8 @@
 
 .food-title {
   font-weight: 600;
-  font-size: 16px;
-  color: #111827;
+  font-size: 18px;
+  color: #232323;
   text-transform: capitalize;
 }
 
@@ -61,8 +61,8 @@
 }
 
 .food-price {
-  color: #6b7280;
-  font-size: 15px;
+  color: #272727;
+  font-size: 12px;
   font-weight: 500;
 }
 

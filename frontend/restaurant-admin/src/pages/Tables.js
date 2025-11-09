@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaTrashAlt, FaChair, FaPlus } from "react-icons/fa";
+import { FaTrashAlt, FaPlus } from "react-icons/fa";
+import { LiaChairSolid } from "react-icons/lia";
 import API from "../api/axios";
 import "./Tables.css";
 
@@ -84,7 +85,7 @@ export default function Tables() {
             </div>
 
             <div className="table-footer">
-              <FaChair className="chair-icon" />
+              <LiaChairSolid className="chair-icon" />
               <span className="chair-count">
                 {t.size?.toString().padStart(2, "0")}
               </span>

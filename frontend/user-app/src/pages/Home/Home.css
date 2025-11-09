@@ -49,24 +49,32 @@
 
 .next-fixed {
     position: fixed;
-    left: 0;
-    right: 0;
+    left: 36vh;
+    right: 0px;
     bottom: 16px;
-    display: flex;  
+    display: flex;
     justify-content: center;
 }
 
 .btn-next {
+    height: 35px;
+    width: 110px;
     background: #505050;
     color: #fff;
-    padding: 12px 36px;
-    border-radius: 18px;
+    border-radius: 15px;
     border: none;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.btn-next:hover {
+  background: #333;
 }
 
 /* Blur background when modal visible */
 .home-shell.modal-active {
-  filter: blur(1.2px);
-  pointer-events: none;
-  user-select: none;
+    filter: blur(1.2px);
+    pointer-events: none;
+    user-select: none;
 }
+

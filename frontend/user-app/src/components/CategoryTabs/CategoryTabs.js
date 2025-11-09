@@ -1,20 +1,17 @@
 import React from "react";
 import "./CategoryTabs.css";
-import {
-  FaHamburger,
-  FaPizzaSlice,
-  FaGlassWhiskey,
-  FaCarrot,
-  FaUtensils,
-} from "react-icons/fa";
+import { FaHamburger, FaUtensils } from "react-icons/fa";
+import { GiFullPizza, GiFrenchFries } from "react-icons/gi";
+import { RiDrinksLine } from "react-icons/ri";
+import { LuIceCreamBowl } from "react-icons/lu";
 
 export default function CategoryTabs({ categories, selected, onSelect }) {
   const icons = {
     Burger: <FaHamburger size={20} />,
-    Pizza: <FaPizzaSlice size={20} />,
-    Drink: <FaGlassWhiskey size={20} />,
-    "French fries": <FaUtensils size={20} />, 
-    Veggies: <FaCarrot size={20} />,
+    Pizza: <GiFullPizza size={20} />,
+    Drink: <RiDrinksLine size={20} />,
+    "French fries": <GiFrenchFries size={20} />,
+    Veggies: <LuIceCreamBowl size={20} />,
     Default: <FaUtensils size={20} />,
   };
 
@@ -35,7 +32,7 @@ export default function CategoryTabs({ categories, selected, onSelect }) {
           </button>
         ))
       ) : (
-        <p className="no-category">No categories found</p>
+        <p className="loading">Loading...</p>
       )}
     </div>
   );

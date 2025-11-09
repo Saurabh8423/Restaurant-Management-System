@@ -24,31 +24,8 @@ export default function Analytics() {
   const [chefPerformance, setChefPerformance] = useState([]);
   const [revenueData, setRevenueData] = useState([]);
   const [filter, setFilter] = useState("Daily");
-  const [loading, setLoading] = useState(false);
+  const [ , setLoading] = useState(false);
 
-
-  const generateChefPerformance = useCallback((totalOrders = 20) => {
-    const chefs = ["Mohan", "Pritam", "Yash", "Rahul"];
-    const performance = chefs.map((chef) => ({
-      name: chef,
-      totalOrders: 0,
-      served: 0,
-      pending: 0,
-    }));
-
-    for (let i = 0; i < totalOrders; i++) {
-      const randomChef =
-        performance[Math.floor(Math.random() * performance.length)];
-      randomChef.totalOrders += 1;
-    }
-
-    performance.forEach((chef) => {
-      chef.served = Math.floor(Math.random() * chef.totalOrders);
-      chef.pending = chef.totalOrders - chef.served;
-    });
-
-    return performance;
-  }, []);
 
   const fetchAnalyticsData = useCallback(
     async (selectedFilter) => {

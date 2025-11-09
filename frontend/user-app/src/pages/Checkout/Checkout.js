@@ -111,8 +111,12 @@ export default function Checkout() {
       );
       try {
         await api.patch(`/tables/${table.tableNumber}`, { reserved: true });
-      } catch {
-        console.warn(" Table reservation failed, proceeding locally.");
+      } catch (err) {
+        if (err.response?.status === 404) {
+          console.warn("No table API route found, skipping remote reservation.");
+        } else {
+          console.warn("Table reservation failed, proceeding locally.", err);
+        }
       }
     }
 

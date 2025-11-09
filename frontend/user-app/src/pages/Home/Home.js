@@ -97,7 +97,7 @@ export default function Home() {
     if (foundCategory && foundCategory !== selected) {
       setSelected(foundCategory);
     }
-  }, [search]);
+  }, [search, selected]);
 
   useEffect(() => {
     const filtered = items.filter(

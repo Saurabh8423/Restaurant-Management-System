@@ -1,7 +1,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-import { FaChartLine, FaTable, FaListAlt, FaPlus } from "react-icons/fa";
+import { MdDashboard, MdOutlineBarChart } from "react-icons/md";
+import { RiArmchairFill } from "react-icons/ri";
+import { PiNotebookFill } from "react-icons/pi";
 
 export default function Sidebar() {
   return (
@@ -13,7 +15,7 @@ export default function Sidebar() {
             isActive ? "nav-item active" : "nav-item"
           }
         >
-          <FaChartLine className="nav-icon" title="Analytics" />
+          <MdDashboard className="nav-icon" title="Analytics" />
         </NavLink>
 
         <NavLink
@@ -22,7 +24,7 @@ export default function Sidebar() {
             isActive ? "nav-item active" : "nav-item"
           }
         >
-          <FaTable className="nav-icon" title="Tables" />
+          <RiArmchairFill className="nav-icon" title="Tables" />
         </NavLink>
 
         <NavLink
@@ -31,22 +33,21 @@ export default function Sidebar() {
             isActive ? "nav-item active" : "nav-item"
           }
         >
-          <FaListAlt className="nav-icon" title="Orders" />
+          <PiNotebookFill className="nav-icon" title="Orders" />
         </NavLink>
 
-        {/* Updated: Opens AdminMenu instead of AddProduct */}
         <NavLink
           to="/admin-menu"
           className={({ isActive }) =>
             isActive ? "nav-item active" : "nav-item"
           }
         >
-          <FaPlus className="nav-icon" title="Manage Menu / Add Product" />
+          <MdOutlineBarChart className="nav-icon" title="Manage Menu / Add Product" />
         </NavLink>
 
         <NavLink
           to="#"
-          onClick={(e) => e.preventDefault()} 
+          onClick={(e) => e.preventDefault()}
           className={({ isActive }) =>
             isActive ? "nav-item active logout-link" : "nav-item logout-link"
           }

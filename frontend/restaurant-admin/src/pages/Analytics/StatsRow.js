@@ -1,5 +1,7 @@
 import React from "react";
-import { FaUsers, FaChartLine, FaUtensils, FaRupeeSign } from "react-icons/fa";
+import { FaRegAddressBook , FaRupeeSign } from "react-icons/fa";
+import { PiBowlFoodBold } from "react-icons/pi";
+import { MdOutlineGroup } from "react-icons/md";
 import "./StatsRow.css";
 import { useSearch } from "../../context/SearchContext";
 
@@ -10,7 +12,7 @@ const StatCard = ({ title, value, icon: Icon, iconColor, bgColor, blurred }) => 
       className="icon-container"
       style={{ backgroundColor: bgColor, color: iconColor }}
     >
-      <Icon size={20} />
+      <Icon size={30} />
     </div>
     <div className="text-content">
       <span className="stat-value">{value}</span>
@@ -57,33 +59,33 @@ export default function StatsRow({ stats = {} }) {
       <StatCard
         title="TOTAL CHEF"
         value={String(4).padStart(2, "0")}
-        icon={FaUtensils}
-        iconColor="#60a5fa"
-        bgColor="#eff6ff"
+        icon={PiBowlFoodBold}
+        iconColor="#000000"
+        bgColor="#E0EFFF"
         blurred={shouldBlur("TOTAL CHEF")}
       />
       <StatCard
         title="TOTAL REVENUE"
         value={`₹${(totalRevenue / 1000).toFixed(1)}K`}
         icon={FaRupeeSign}
-        iconColor="#34d399"
-        bgColor="#d1fae5"
+        iconColor="#000000"
+        bgColor="#E0EFFF"
         blurred={shouldBlur("TOTAL REVENUE")}
       />
       <StatCard
         title="TOTAL ORDERS"
         value={String(totalOrders).padStart(2, "0")}
-        icon={FaChartLine}
-        iconColor="#fcd34d"
-        bgColor="#fefce8"
+        icon={FaRegAddressBook }
+        iconColor="#000000"
+        bgColor="#E0EFFF"
         blurred={shouldBlur("TOTAL ORDERS")}
       />
       <StatCard
         title="TOTAL CLIENTS"
         value={String(totalClients).padStart(2, "0")}
-        icon={FaUsers}
-        iconColor="#fb923c"
-        bgColor="#fff7ed"
+        icon={MdOutlineGroup}
+        iconColor="#000000"
+        bgColor="#E0EFFF"
         blurred={shouldBlur("TOTAL CLIENTS")}
       />
     </div>

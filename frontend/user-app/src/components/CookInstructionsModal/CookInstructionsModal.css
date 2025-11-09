@@ -11,8 +11,8 @@
 
 .cook-card {
   background: #f9fafb;
-  width: 95%;
-  max-width: 350px;
+  width: 90%;
+  max-width: 330px;
   border-radius: 18px;
   padding: 20px 16px 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
@@ -59,11 +59,11 @@
 }
 
 .cook-card textarea {
-  width: 80%;
+  width: 95%;
   height: 90px;
   border: 1px solid #e6eee9;
   border-radius: 10px;
-  padding: 0px;
+  padding: 8px;
   margin-top: 10px;
   resize: none;
   font-size: 16px;
@@ -93,6 +93,12 @@
   border-radius: 8px;
   padding: 8px 20px;
   font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-cancel:hover {
+  background: #222;
+  color: #fff;
 }
 
 .btn-next {
@@ -103,6 +109,7 @@
   padding: 8px 20px;
   font-weight: 600;
   transition: background 0.2s ease;
+  cursor: pointer;
 }
 
 .btn-next:hover {

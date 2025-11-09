@@ -2,7 +2,7 @@
   display: flex;
   gap: 12px;
   overflow-x: auto;
-  padding: 10px 0;
+  padding: 10px 2px;
   -ms-overflow-style: none;
   scroll-behavior: smooth;
 }
@@ -33,6 +33,7 @@
   transition: all 0.3s ease;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
   flex-shrink: 0;
+  cursor: pointer;
 }
 
 .cat-btn:hover {
@@ -40,17 +41,19 @@
 }
 
 .cat-btn.active {
-  background: #444;
-  color: #fff;
+  background: #616161;
+  color: #F5F5F5;
   transform: scale(1.05);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .cat-icon {
+  height: 25px;
+  width: 20px;
   margin-bottom: 4px;
 }
 
 .cat-label {
-  font-size: 13px;
+  font-size: 10px;
   font-weight: 500;
 }
