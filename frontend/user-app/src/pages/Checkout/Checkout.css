@@ -14,21 +14,24 @@
 }
 
 .cart-item {
+  height: 90px;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fff;
+  background: none;
   border-radius: 10px;
   padding: 10px 12px;
   transition: transform 0.2s ease;
+  position: relative;
 }
 
 
 /*  Image styling */
 .cart-img {
-  width: 70px;
-  height: 70px;
-  border-radius: 8px;
+  width: 120px;
+  height: 90px;
+  border-radius: 4px;
   overflow: hidden;
   flex-shrink: 0;
   background: #f3f4f6;
@@ -52,13 +55,15 @@
 
 .ci-name {
   font-weight: 600;
-  color: #333;
-  font-size: 15px;
+  color: #000000;
+  font-size: 18px;
+  margin-bottom: 10px;
 }
 
 .ci-price {
-  font-size: 14px;
-  color: #666;
+  font-size: 12px;
+  color: #272727;
+  margin-bottom: 35px;
 }
 
 /*  Quantity controls */
@@ -66,6 +71,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-top: 50px;
 }
 
 .ci-controls button {
@@ -86,6 +92,42 @@
   text-align: center;
   font-weight: 600;
 }
+
+/* Remove (X) Button */
+.remove-btn {
+  background-color: #E04444;
+  color: #ffffff;
+  border: none;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 2;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.remove-btn span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 2;
+  font-size: 20px;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.remove-btn:hover {
+  background-color: #c93b3b;
+}
+
 
 /* ---------------- ORDER TYPE TOGGLE ---------------- */
 .order-type {

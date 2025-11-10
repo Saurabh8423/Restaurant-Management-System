@@ -3,7 +3,7 @@ import { FaRegAddressBook , FaRupeeSign } from "react-icons/fa";
 import { PiBowlFoodBold } from "react-icons/pi";
 import { MdOutlineGroup } from "react-icons/md";
 import "./StatsRow.css";
-import { useSearch } from "../../context/SearchContext";
+import { useSearch } from "../../../context/SearchContext";
 
 // 🔹 Single Stat Card Component
 const StatCard = ({ title, value, icon: Icon, iconColor, bgColor, blurred }) => (

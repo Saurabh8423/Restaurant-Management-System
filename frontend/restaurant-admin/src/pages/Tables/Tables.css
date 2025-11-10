@@ -77,15 +77,13 @@
 
 /* Chair info bottom right */
 .table-footer {
-  height: 14px;
-  width: 14px;
   position: absolute;
   bottom: 6px;
   right: 8px;
   display: flex;
   align-items: center;
   font-size: 13px;
-  gap: 4px;
+  gap: 2px;
   color: #000000;
 }
 

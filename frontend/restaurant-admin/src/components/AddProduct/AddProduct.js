@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import API from "../api/axios";
+import API from "../../api/axios";
 import "./AddProduct.css";
 
 export default function AddProduct({ onClose, onProductAdded }) {

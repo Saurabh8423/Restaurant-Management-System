@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { FaTrashAlt, FaPlus } from "react-icons/fa";
 import { LiaChairSolid } from "react-icons/lia";
-import API from "../api/axios";
+import API from "../../api/axios";
 import "./Tables.css";
 
 export default function Tables() {

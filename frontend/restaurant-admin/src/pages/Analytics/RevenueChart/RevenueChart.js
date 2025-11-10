@@ -10,7 +10,7 @@ import {
   CartesianGrid,
 } from "recharts";
 import { FaAngleDown } from "react-icons/fa6";
-import ChartCard from "../../components/ChartCard";
+import ChartCard from "../../../components/ChartCard/ChartCard";
 import "./RevenueChart.css";
 
 const TimeFilter = ({ selected, setSelected }) => (

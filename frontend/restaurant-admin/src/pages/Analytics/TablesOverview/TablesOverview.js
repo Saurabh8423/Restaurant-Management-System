@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import ChartCard from "../../components/ChartCard";
-import API from "../../api/axios";
+import ChartCard from "../../../components/ChartCard/ChartCard";
+import API from "../../../api/axios";
 import "./TablesOverview.css";
 
 export default function TablesOverview() {

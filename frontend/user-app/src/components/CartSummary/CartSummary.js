@@ -11,7 +11,6 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
     if (!swiped) {
       setSwiped(true);
       onPlaceOrder?.();
-      setTimeout(() => setSwiped(false), 1500);
     }
   };
 
@@ -129,7 +128,7 @@ export default function CartSummary({ cart, user, orderType, onPlaceOrder }) {
         ref={sliderRef}
         onClick={handleOrder}
       >
-        <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>➡</div>
+        <div className={`swipe-thumb ${swiped ? "swiped" : ""}`}>➔</div>
         <span className={`swipe-text ${swiped ? "done" : ""}`}>
           {swiped ? "Order Placed!" : "Swipe to Order"}
         </span>

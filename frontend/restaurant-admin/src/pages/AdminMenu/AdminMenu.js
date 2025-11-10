@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useMemo } from "react";
-import API from "../api/axios";
-import AddProduct from "../components/AddProduct";
-import ProductCard from "../components/ProductCard";
+import API from "../../api/axios";
+import AddProduct from "../../components/AddProduct/AddProduct";
+import ProductCard from "../../components/ProductCard/ProductCard";
 import "./AdminMenu.css";
-import { useSearch } from "../context/SearchContext";
+import { useSearch } from "../../context/SearchContext";
 
 export default function AdminMenu() {
   const { searchTerm } = useSearch();

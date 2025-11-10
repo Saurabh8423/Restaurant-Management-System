@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 import { FaAngleDown } from "react-icons/fa6";
-import ChartCard from "../../components/ChartCard";
+import ChartCard from "../../../components/ChartCard/ChartCard";
 import "./OrderSummary.css";
 
 const TimeFilter = ({ selected, setSelected }) => (

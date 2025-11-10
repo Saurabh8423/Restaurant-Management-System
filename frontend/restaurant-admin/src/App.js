@@ -1,11 +1,11 @@
 import React from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
-import Sidebar from "./components/Sidebar";
-import Header from "./components/Header";
+import Sidebar from "./components/Sidebar/Sidebar";
+import Header from "./components/Header/Header";
 import Analytics from "./pages/Analytics/Analytics";
-import Tables from "./pages/Tables";
-import Orders from "./pages/Orders";
-import AdminMenu from "./pages/AdminMenu";
+import Tables from "./pages/Tables/Tables";
+import Orders from "./pages/Order/Orders";
+import AdminMenu from "./pages/AdminMenu/AdminMenu";
 import "./App.css";
 
 function App() {

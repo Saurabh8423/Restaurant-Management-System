@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import API from "../../api/axios";
 import "./Analytics.css";
-import StatsRow from "./StatsRow";
-import OrderSummary from "./OrderSummary";
-import RevenueChart from "./RevenueChart";
-import TablesOverview from "./TablesOverview";
-import ChefPerformance from "./ChefPerformance";
+import StatsRow from "./StatsRow/StatsRow";
+import OrderSummary from "./OrderSummary/OrderSummary";
+import RevenueChart from "./RevenueChart/RevenueChart";
+import TablesOverview from "./TablesOverview/TablesOverview";
+import ChefPerformance from "./ChefPerformance/ChefPerformance";
 import { useSearch } from "../../context/SearchContext";
 
 export default function Analytics() {

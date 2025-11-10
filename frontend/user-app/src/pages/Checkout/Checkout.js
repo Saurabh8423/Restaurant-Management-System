@@ -110,7 +110,7 @@ export default function Checkout() {
         )
       );
       try {
-        await api.patch(`/tables/${table.tableNumber}`, { reserved: true });
+        await api.put(`/tables/${table._id}`, { reserved: true });
       } catch (err) {
         if (err.response?.status === 404) {
           console.warn("No table API route found, skipping remote reservation.");
@@ -143,10 +143,9 @@ export default function Checkout() {
     try {
       const res = await api.post("/orders", orderData);
       if (res.status === 201 || res.status === 200) {
-        alert(" Order placed successfully!");
         localStorage.removeItem("rms_cart");
         setCart([]);
-        navigate("/thankyou");
+        setTimeout(() => navigate("/thankyou"), 300);
       }
     } catch (err) {
       console.error(" Order creation failed:", err);
@@ -202,6 +201,14 @@ export default function Checkout() {
                 <span>{it.qty}</span>
                 <button onClick={() => updateQty(it._id, it.name, +1)}>+</button>
               </div>
+              <button
+                className="remove-btn"
+                onClick={() =>
+                  setCart((prev) => prev.filter((x) => x._id !== it._id || x.name !== it.name))
+                }
+              >
+                <span>×</span>
+              </button>
             </div>
           ))}
         </div>

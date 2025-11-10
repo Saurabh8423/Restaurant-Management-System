@@ -1,7 +1,7 @@
 import React from "react";
 import "./Header.css";
-import logo from "../Assets/Restaurant-Logo.png";
-import { useSearch } from "../context/SearchContext";
+import logo from "../../Assets/Restaurant-Logo.png";
+import { useSearch } from "../../context/SearchContext";
 import { useLocation } from "react-router-dom";
 
 export default function Header() {
